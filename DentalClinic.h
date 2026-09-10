@@ -23,7 +23,6 @@ private:
 
 public:
     std::string patient_name;
-    Service service;
 
     void add_service(Service service) {
         services[services_count] = service;
