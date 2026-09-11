@@ -1,4 +1,5 @@
-#include "DentalClinic.h"
+#include "Service.h"
+#include "Patient.h"
 
 int main() {
     Service service_first;
