@@ -4,4 +4,5 @@ project(Lab_1)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(Lab_1 Patient.cpp
-        Service.cpp)
+        Service.cpp
+        main.cpp)
