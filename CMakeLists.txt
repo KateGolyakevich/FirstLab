@@ -3,6 +3,6 @@ project(Lab_1)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Lab_1 Patient.cpp
-        Service.cpp
-        main.cpp)
+add_executable(Lab_1 src/Patient.cpp
+        src/Service.cpp
+        src/main.cpp)

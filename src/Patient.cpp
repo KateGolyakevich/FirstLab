@@ -1,4 +1,4 @@
-#include "Patient.h"
+#include "../include/Patient.h"
 
 void Patient::add_service(Service service) {
     services[services_count] = service;

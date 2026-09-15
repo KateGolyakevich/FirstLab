@@ -1,4 +1,4 @@
-#include "Patient.h"
+#include "../include/Patient.h"
 
 int main() {
     Service service_first;

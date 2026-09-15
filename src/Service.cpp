@@ -1,4 +1,4 @@
-#include "Service.h"
+#include "../include/Service.h"
 
 void Service::print() {
     std::cout << "Услуга: " << serve_name << std::endl;
