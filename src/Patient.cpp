@@ -6,7 +6,7 @@ void Patient::add_service(Service service) {
 }
 
 void Patient::print() {
-    std::cout <<"\nПациент: " << patient_name << std::endl;
+    std::cout <<"\nПациент: " << name << std::endl;
     std::cout << "Количество выполненных процедур: " << services_count << std::endl;
 
     for (int i = 0; i < services_count; i++) {

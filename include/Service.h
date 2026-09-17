@@ -3,9 +3,9 @@
 
 class Service{
 public:
-    std::string serve_name;
+    std::string name;
     std::string doctor_name;
-    int serve_cost;
+    int cost;
     int duration;
 
     void print();
