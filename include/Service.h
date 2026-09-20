@@ -6,14 +6,14 @@
 
 class Service{
 private:
-    std::string name;
+    std::string serve;
     std::string doctor_name;
     int cost;
     int duration;
 
     public:
     Service();
-    Service(std::string name, std::string doctor_name, int cost, int duration);
+    Service(std::string serve, std::string doctor_name, int cost, int duration);
 
     ~Service();
 
@@ -22,7 +22,7 @@ private:
     int get_cost() const;
     int get_duration() const;
 
-    void set_name(const std::string& name);
+    void set_name(const std::string& serve);
     void set_doctor_name(const std::string& doctor_name);
     void set_cost(int cost);
     void set_duration(int dur);

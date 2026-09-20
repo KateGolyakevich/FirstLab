@@ -1,35 +1,27 @@
+#include <iostream>
+#include <string>
+
 #include "../include/Patient.h"
+#include "../include/Service.h"
 
 int main() {
-    Service service_first;
-    service_first.name = "Лечение кариеса";
-    service_first.doctor_name = "Иванов Павел Иванович";
-    service_first.cost = 5000;
-    service_first.duration = 60;
+    Service serve_first("Удаление кариеса", "Иванов И.И.", 500, 10);
+    Service serve_second("Протезирование", "Петров П.П.", 1200, 100);
+    Service serve_third("Удаление зуба мудрости", "Сидорова А.А.", 800, 60);
 
-    Service service_second;
-    service_second.name = "Протезирование";
-    service_second.doctor_name = "Александрова Елена Петровна";
-    service_second.cost = 50000;
-    service_second.duration = 200;
+    Patient patient_first("Смирнов Олег Владимирович");
+    patient_first.add_serve(serve_first);
+    patient_first.add_serve(serve_second);
 
-    Service service_third;
-    service_third.name = "Удаление зуба мудрости";
-    service_third.doctor_name = "Авдей Игорь Михайлович";
-    service_third.cost = 7000;
-    service_third.duration = 100;
+    Patient patient_second("Корней Ольга Владимировна");
+    patient_second.add_serve(serve_third);
 
-    Patient patient_first;
-    patient_first.name = "Бируль Никита Васильевич";
-    patient_first.add_service(service_second);
-    patient_first.add_service(service_third);
-
-    Patient patient_second;
-    patient_second.name = "Ковальчук Ольга Владимировна";
-    patient_second.add_service(service_first);
-
+    std::cout << "\nИтоговая информация" << std::endl;
     patient_first.print();
     patient_second.print();
+
+
+
 
     return 0;
 }

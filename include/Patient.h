@@ -1,3 +1,6 @@
+#ifndef PATIENT_H
+#define PATIENT_H
+
 #include <iostream>
 #include <string>
 #include "Service.h"
@@ -6,9 +9,19 @@ class Patient {
 private:
     Service services[10];
     int services_count = 0;
-    public:
     std::string name;
+public:
+    Patient();
+    Patient(const std::string name);
 
-    void add_service(Service service);
+    ~Patient();
+
+    std::string get_patient_name() const;
+    void set_patient_name(const std::string& name);
+    int get_serve_count() const;
+
+    void add_serve(Service service);
     void print();
 };
+
+#endif
