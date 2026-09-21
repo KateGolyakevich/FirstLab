@@ -27,6 +27,18 @@ class Service{
     void set_cost(int cost);
     void set_duration(int dur);
 
+    bool operator==(const Service& service)const;
+    bool operator!=(const Service& service)const;
+    bool operator<(const Service& service)const;
+    bool operator>(const Service& service)const;
+
+    friend std::ostream& operator<<(std::ostream& os, const Service& service);
+    friend std::istream& operator>>(std::istream& is, Service& service);
+
+    friend bool is_exspensive(const Service& service, int cost_limit);
+
+
+
     void print();
 };
 
