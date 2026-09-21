@@ -45,6 +45,27 @@ void Service::print() {
     std::cout << "Длительность: " << duration << std::endl;
 }
 
+bool Service::operator==(const Service &other)const{
+    return(this->serve == other.serve) && (this->doctor_name == other.doctor_name) &&
+        (this->cost == other.cost) && (this->duration == other.duration);
+}
+bool Service::operator!=(const Service &other)const {
+    return(this->serve != other.serve) || (this->doctor_name != other.doctor_name) ||
+        (this->cost != other.cost) || (this->duration != other.duration);
+}
+
+bool Service::operator<(const Service &service) const {
+    return(this->cost < service.cost);
+}
+
+bool Service::operator>(const Service &service) const {
+    return(this->cost > service.cost);
+}
+
+
+
+
+
 
 
 

@@ -37,8 +37,6 @@ class Service{
 
     friend bool is_exspensive(const Service& service, int cost_limit);
 
-
-
     void print();
 };
 
