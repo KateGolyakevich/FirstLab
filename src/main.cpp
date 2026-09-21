@@ -20,8 +20,5 @@ int main() {
     patient_first.print();
     patient_second.print();
 
-
-
-
     return 0;
 }

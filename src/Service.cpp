@@ -16,12 +16,12 @@ Service::Service(std::string serve, std::string doctor_name, int cost, int dur) 
 
 Service::~Service(){}
 
-std::string Service::get_serve_name() const {return serve;}
+std::string Service::get_serve() const {return serve;}
 std::string Service::get_doctor_name() const {return doctor_name;}
 int Service::get_cost() const {return cost;}
 int Service::get_duration() const {return duration;}
 
-void Service::set_name(const std::string &serve) {
+void Service::set_serve(const std::string &serve) {
     this->serve = serve;
 }
 
