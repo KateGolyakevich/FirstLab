@@ -16,9 +16,9 @@ public:
 
     ~Patient();
 
-    std::string get_patient_name() const;
-    void set_patient_name(const std::string& name);
-    int get_serve_count() const;
+    std::string get_name() const;
+    void set_name(const std::string& name);
+    int get_service_count() const;
 
     void add_serve(Service service);
     void print();

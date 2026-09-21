@@ -12,14 +12,14 @@ Patient::Patient(const std::string name) {
 
 Patient::~Patient(){}
 
-std::string Patient::get_patient_name() const {
+std::string Patient::get_name() const {
     return name;
 }
 
-void Patient::set_patient_name(const std::string& name) {
+void Patient::set_name(const std::string& name) {
     this->name = name;
 }
-int Patient::get_serve_count() const {
+int Patient::get_service_count() const {
     return services_count;
 }
 
