@@ -26,7 +26,7 @@ int main() {
         std::cout << "Услуги разные." << std::endl;
     }
 
-    if (is_exspensive(serve_second, 1000)) {
+    if (is_expensive(serve_second, 1000)) {
         std::cout << "Услуга \"" << serve_second.get_serve() << "\" является дорогой (>1000)." << std::endl;
     }
 
@@ -40,8 +40,8 @@ int main() {
     patient += serve_second;
     patient += serve_third;
 
-    std::cout << "\nПытаемся добавить дубликат Укола:" << std::endl;
-    patient += serve_first;
+    //std::cout << "\nПытаемся добавить дубликат удаление кариесса:" << std::endl;
+    //patient += serve_first;
 
     std::cout << "\nТекущее состояние пациента:" << std::endl;
     patient.print();

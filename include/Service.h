@@ -35,7 +35,7 @@ class Service{
     friend std::ostream& operator<<(std::ostream& os, const Service& service);
     friend std::istream& operator>>(std::istream& is, Service& service);
 
-    friend bool is_exspensive(const Service& service, int cost_limit);
+    friend bool is_expensive(const Service& service, int cost_limit);
 
     void print();
 };

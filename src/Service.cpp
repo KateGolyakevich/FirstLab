@@ -55,22 +55,23 @@ std::ostream& operator<<(std::ostream& os, const Service& service) {
 }
 
 std::istream& operator>>(std::istream& is, Service& service) {
-    std::cout << "Введите название услуги: " << std::endl;
+    std::cout << "Введите название услуги: ";
     is >> service.serve;
-    std::cout << "Введите ФИО врача: " << std::endl;;
+    std::cout << "Введите ФИО врача: ";
     is >> service.doctor_name;
-    std::cout << "Введите стоимость услуги: " << std::endl;;
+    std::cout << "Введите стоимость услуги: ";
     is >> service.cost;
     std::cout << "Введите длительность (мин)";
     is >> service.duration;
+    return is;
 }
 
-bool is_exspensive(const Service &service, int cost_limit) {
+bool is_expensive(const Service &service, int cost_limit) {
     return service.cost > cost_limit;
 }
 
 void Service::print() {
-    std::cout << *this << std::endl; // Делегируем вывод оператору <<
+    std::cout << *this << std::endl;
 }
 
 
