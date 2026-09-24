@@ -20,8 +20,13 @@ public:
     void set_name(const std::string& name);
     int get_service_count() const;
 
-    void add_serve(Service service);
-    void print();
+    void add_serve(const Service& service);
+    void print()const;
+
+    Patient& operator+=(const Service& service);
+    Patient& operator-=(const Service& service);
+
+    friend std::ostream& operator<<(std::ostream& os, const Patient& patient);
 };
 
 #endif
