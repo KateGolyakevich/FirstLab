@@ -56,9 +56,9 @@ std::ostream& operator<<(std::ostream& os, const Service& service) {
 
 std::istream& operator>>(std::istream& is, Service& service) {
     std::cout << "Введите название услуги: ";
-    is >> service.serve;
+    std::getline(is >> std::ws, service.serve);
     std::cout << "Введите ФИО врача: ";
-    is >> service.doctor_name;
+    std::getline(is >> std::ws, service.doctor_name);
     std::cout << "Введите стоимость услуги: ";
     is >> service.cost;
     std::cout << "Введите длительность (мин)";
