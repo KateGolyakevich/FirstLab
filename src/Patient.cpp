@@ -32,36 +32,36 @@ void Patient::print() const {
     std::cout << "-----------------------------------" << std::endl;
 }
 
-Patient& Patient::operator+=(const Service& s) {
+Patient& Patient::operator+=(const Service& service) {
     if (services_count >= 10) {
         std::cout << "Невозможно добавить услугу: список полон." << std::endl;
         return *this;
     }
 
     for (int i = 0; i < services_count; i++) {
-        if (services[i] == s) {
-            std::cout << "Услуга \"" << s.get_serve() << "\" уже добавлена пациенту!" << std::endl;
+        if (services[i] == service) {
+            std::cout << "Услуга \"" << service.get_serve() << "\" уже добавлена пациенту!" << std::endl;
             return *this;
         }
     }
 
-    services[services_count] = s;
+    services[services_count] = service;
     services_count++;
     return *this;
 }
 
-Patient& Patient::operator-=(const Service& s) {
+Patient& Patient::operator-=(const Service& service) {
     for (int i = 0; i < services_count; i++) {
-        if (services[i] == s) {
+        if (services[i] == service) {
             for (int j = i; j < services_count - 1; j++) {
                 services[j] = services[j + 1];
             }
             services_count--;
-            std::cout << "Услуга \"" << s.get_serve() << "\" удалена." << std::endl;
+            std::cout << "Услуга \"" << service.get_serve() << "\" удалена." << std::endl;
             return *this;
         }
     }
-    std::cout << "Услуга \"" << s.get_serve() << "\" не найдена, удаление невозможно." << std::endl;
+    std::cout << "Услуга \"" << service.get_serve() << "\" не найдена, удаление невозможно." << std::endl;
     return *this;
 }
 
