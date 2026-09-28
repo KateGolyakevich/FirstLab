@@ -29,21 +29,21 @@ void Service::set_doctor_name(const std::string& doctor) { this->doctor_name = d
 void Service::set_cost(int cost) { if(cost >= 0) this->cost = cost; }
 void Service::set_duration(int duration) { if(duration >= 0) this->duration = duration; }
 
-bool Service::operator==(const Service &other)const{
-    return(this->serve == other.serve) && (this->doctor_name == other.doctor_name) &&
-        (this->cost == other.cost) && (this->duration == other.duration);
+bool Service::operator==(const Service &service)const{
+    return(this->serve == service.serve) && (this->doctor_name == service.doctor_name) &&
+        (this->cost == service.cost) && (this->duration == service.duration);
 }
-bool Service::operator!=(const Service &other)const {
-    return(this->serve != other.serve) || (this->doctor_name != other.doctor_name) ||
-        (this->cost != other.cost) || (this->duration != other.duration);
-}
-
-bool Service::operator<(const Service &other) const {
-    return(this->cost < other.cost);
+bool Service::operator!=(const Service &service)const {
+    return(this->serve != service.serve) || (this->doctor_name != service.doctor_name) ||
+        (this->cost != service.cost) || (this->duration != service.duration);
 }
 
-bool Service::operator>(const Service &other) const {
-    return(this->cost > other.cost);
+bool Service::operator<(const Service &service) const {
+    return(this->cost < service.cost);
+}
+
+bool Service::operator>(const Service &service) const {
+    return(this->cost > service.cost);
 }
 
 std::ostream& operator<<(std::ostream& os, const Service& service) {
@@ -61,7 +61,7 @@ std::istream& operator>>(std::istream& is, Service& service) {
     std::getline(is >> std::ws, service.doctor_name);
     std::cout << "Введите стоимость услуги: ";
     is >> service.cost;
-    std::cout << "Введите длительность (мин)";
+    std::cout << "Введите длительность (мин): ";
     is >> service.duration;
     return is;
 }

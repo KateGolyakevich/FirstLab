@@ -6,11 +6,11 @@
 #include "Service.h"
 
 class Patient {
-private:
+    private:
     Service services[10];
     int services_count = 0;
     std::string name;
-public:
+    public:
     Patient();
     Patient(const std::string name);
 
