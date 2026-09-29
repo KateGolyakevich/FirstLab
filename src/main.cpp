@@ -33,7 +33,7 @@ int main() {
     std::cin >> serve_five;
     std::cout << "Вы ввели: " << serve_five << std::endl;
 
-    Patient patient("Смирнов Алексей");
+    Patient patient("Смирнов Алексей Владимирович");
 
     patient += serve_first;
     patient += serve_second;
