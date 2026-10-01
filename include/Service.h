@@ -7,36 +7,26 @@
 class Service{
     private:
     std::string serve;
-    std::string doctor_name;
     int cost;
     int duration;
 
     public:
     Service();
-    Service(std::string serve, std::string doctor_name, int cost, int duration);
-
-    ~Service();
+    Service(std::string serve, int cost, int duration);
+    virtual ~Service();
 
     std::string get_serve()const;
-    std::string get_doctor_name()const;
-    int get_cost() const;
-    int get_duration() const;
+    int get_cost()const;
+    int get_duration()const;
 
     void set_serve(const std::string& serve);
-    void set_doctor_name(const std::string& doctor_name);
     void set_cost(int cost);
-    void set_duration(int dur);
+    void set_duration(int duration);
 
-    bool operator==(const Service& service)const;
-    bool operator!=(const Service& service)const;
-    bool operator<(const Service& service)const;
-    bool operator>(const Service& service)const;
+    virtual std::string get_serve_type()const;
+    virtual int get_total_cost() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Service& service);
-    friend std::istream& operator>>(std::istream& is, Service& service);
-
-    friend bool is_expensive(const Service& service, int cost_limit);
-
 };
 
 #endif
