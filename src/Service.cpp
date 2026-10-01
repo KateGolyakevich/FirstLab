@@ -70,9 +70,6 @@ bool is_expensive(const Service &service, int cost_limit) {
     return service.cost > cost_limit;
 }
 
-void Service::print() {
-    std::cout << *this << std::endl;
-}
 
 
 

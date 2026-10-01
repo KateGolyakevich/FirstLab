@@ -21,15 +21,16 @@ void Patient::add_serve(const Service& service) {
     }
 }
 
-void Patient::print() const {
-    std::cout << "\n=== Пациент: " << name << " ===" << std::endl;
-    std::cout << "Количество процедур: " << services_count << std::endl;
-    std::cout << "-----------------------------------" << std::endl;
+std::ostream& operator<<(std::ostream& os, const Patient& patient) {
+    os << "\n--- Пациент: " << patient.name << " ---" << std::endl;
+    os << "Количество процедур: " << patient.services_count << std::endl;
+    os << "-----------------------------------" << std::endl;
 
-    for (int i = 0; i < services_count; i++) {
-        std::cout << "  " << i + 1 << ". " << services[i] << std::endl;
+    for (int i = 0; i < patient.services_count; i++) {
+        os << "  " << i + 1 << ". " << patient.services[i] << std::endl;
     }
-    std::cout << "-----------------------------------" << std::endl;
+    os << "-----------------------------------" << std::endl;
+    return os;
 }
 
 Patient& Patient::operator+=(const Service& service) {
