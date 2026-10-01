@@ -5,4 +5,5 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(Lab_1 src/Patient.cpp
         src/Service.cpp
-        src/main.cpp)
+        src/main.cpp
+        include/Doctor.h)
