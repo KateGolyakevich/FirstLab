@@ -10,4 +10,5 @@ add_executable(Lab_1 src/Patient.cpp
         src/Doctor.cpp
         include/Therapeutic.h
         include/Surgical.h
-        include/Orthodontic.h)
+        include/Orthodontic.h
+        src/Therapeutic.cpp)
