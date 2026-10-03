@@ -14,7 +14,7 @@ std::string Doctor::get_doctor_type() const { return "Врач";}
 double Doctor::get_coefficient() const {return 1.0;}
 
 std::ostream& operator<<(std::ostream& os, const Doctor& doctor) {
-    os << "\n | " << doctor.get_doctor_type()
+    os << "\n [ " << doctor.get_doctor_type() << "]" << doctor.name
     << " | Стаж:" << doctor.get_experience();
     return os;
 }

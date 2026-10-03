@@ -5,7 +5,7 @@
 #include <string>
 
 class Doctor {
-    private:
+    protected:
     std::string name;
     int experience;
 
