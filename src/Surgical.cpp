@@ -9,8 +9,8 @@ void Surgical::set_operation_type(const std::string& operation_type) {this->oper
 
 std::string Surgical::get_serve_type() const {return "Хирургия";}
 
-std::ostream& operator<<(std::ostream& os, const Surgical& service) {
-    os << static_cast<const Service&>(service)
-    << " | Операция: " << service.get_operation_type();
+std::ostream& operator<<(std::ostream& os, const Surgical& surgical) {
+    os << static_cast<const Service&>(surgical)
+    << " | Операция: " << surgical.operation_type;
     return os;
 }

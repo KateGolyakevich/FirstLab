@@ -13,9 +13,9 @@ void Orthodontic::set_correction_type(const std::string &operation_type) {
 void Orthodontic::set_correction_material(const std::string &operation_material) {this->correction_material = correction_material;}
 
 std::string Orthodontic::get_serve_type() const {return "Ортодонтия";}
-std::ostream& operator<<(std::ostream& os, const Orthodontic& service) {
-    os << static_cast<const Service&>(service)
-    << " | Устройство (брекеты, капы, пластинка): " << service.get_correction_type()
-    << " | Материал (Металл, керамика, сапфир): " << service.get_correction_material();
+std::ostream& operator<<(std::ostream& os, const Orthodontic& orthodontic) {
+    os << static_cast<const Service&>(orthodontic)
+    << " | Устройство (брекеты, капы, пластинка): " << orthodontic.correction_type
+    << " | Материал (Металл, керамика, сапфир): " << orthodontic.correction_material;
     return os;
 }

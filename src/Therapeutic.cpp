@@ -14,10 +14,10 @@ std::string Therapeutic::get_serve_type()const {return "Терапия";}
 
 bool Therapeutic::is_repeated_service() const {return is_repeated;}
 
-std::ostream& operator<<(std::ostream& os, const Therapeutic& service) {
-    os << static_cast<const Service&>(service)
-    <<" | Зуб: "<< service.tooth_number
-    <<" | Повторный приём? " << (service.is_repeated ? "Да" : "Нет");
+std::ostream& operator<<(std::ostream& os, const Therapeutic& therapeutic) {
+    os << static_cast<const Service&>(therapeutic)
+    <<" | Зуб: "<< therapeutic.tooth_number
+    <<" | Повторный приём? " << (therapeutic.is_repeated ? "Да" : "Нет");
     return os;
 }
 
