@@ -3,14 +3,14 @@
 
 #include "Service.h"
 
-class Surgical:public Service {
+class SurgicalService:public Service {
     private:
     std::string operation_type;
     public:
-    Surgical();
-    Surgical(std::string serve, int cost, int duration,
+    SurgicalService();
+    SurgicalService(std::string serve, int cost, int duration,
         std::string operation_type);
-    ~Surgical() override;
+    ~SurgicalService() override;
 
     std::string get_operation_type() const;
 
@@ -18,7 +18,7 @@ class Surgical:public Service {
 
     std::string get_serve_type() const override;
 
-    friend std::ostream& operator<<(std::ostream& os, const Surgical& service);
+    friend std::ostream& operator<<(std::ostream& os, const SurgicalService& service);
 };
 
 #endif //SURGICAL_H

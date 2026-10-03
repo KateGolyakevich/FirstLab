@@ -8,16 +8,16 @@ add_executable(Lab_1 src/Patient.cpp
         src/main.cpp
         include/Doctor.h
         src/Doctor.cpp
-        include/Therapeutic.h
-        include/Surgical.h
-        include/Orthodontic.h
-        src/Therapeutic.cpp
-        src/Surgical.cpp
-        src/Orthodontic.cpp
+        include/TherapeuticService.h
+        include/SurgicalService.h
+        include/OrthodonticService.h
+        src/TherapeuticService.cpp
+        src/SurgicalService.cpp
+        src/OrthodonticService.cpp
         include/Therapist.h
         include/Surgeon.h
-        include/Orthodontis.h
-        src/Orthodontis.cpp
+        include/Orthodontist.h
+        src/Orthodontist.cpp
         src/Surgeon.cpp
         src/Therapist.cpp
 )

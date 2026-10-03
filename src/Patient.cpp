@@ -1,69 +1,63 @@
 #include "../include/Patient.h"
 
-Patient::Patient() {
-    this->name = "";
-    this->services_count = 0;
+Patient::Patient() : name(""), has_card(false) {}
+
+Patient::Patient(const std::string& name, bool has_card)
+    : name(name), has_card(has_card) {}
+
+Patient::~Patient() {
+    for (auto* service : services) delete service;
+    services.clear();
 }
 
-Patient::Patient(const std::string name) {
-    this->name = name;
-    this->services_count = 0;
+std::string Patient::get_name() const { return name; }
+void Patient::set_name(const std::string& name) { this->name = name; }
+
+bool Patient::get_has_card() const { return has_card; }
+void Patient::set_has_card(bool has_card) { this->has_card = has_card; }
+
+int Patient::get_service_count() const { return static_cast<int>(services.size()); }
+
+void Patient::add_service(Service* service) {
+    if (service) services.push_back(service);
 }
 
-Patient::~Patient(){}
+int Patient::total_service_count() const {
+    int total = 0;
+    for (auto* service : services) {
+        int price = service->get_cost();
 
-void Patient::add_serve(const Service& service) {
-    if (services_count < 10) {
-        services[services_count] = service;
-        services_count++;
-    } else {
-        std::cout << "Ошибка: Список услуг полон!" << std::endl;
+        if (has_card && service->is_repeated_service()) {
+            price = static_cast<int>(price * 0.98);
+        }
+        total += price;
     }
+    return total;
+}
+
+Patient& Patient::operator+=(Service* service) {
+    if (service) services.push_back(service);
+    return *this;
+}
+
+Patient& Patient::operator-=(Service* service) {
+    for (auto it = services.begin(); it != services.end(); ++it) {
+        if (*it == service) {
+            delete *it;
+            services.erase(it);
+            std::cout << "Услуга удалена." << std::endl;
+            return *this;
+        }
+    }
+    std::cout << "Услуга не найдена." << std::endl;
+    return *this;
 }
 
 std::ostream& operator<<(std::ostream& os, const Patient& patient) {
-    os << "\n--- Пациент: " << patient.name << " ---" << std::endl;
-    os << "Количество процедур: " << patient.services_count << std::endl;
-    os << "-----------------------------------" << std::endl;
-
-    for (int i = 0; i < patient.services_count; i++) {
-        os << "  " << i + 1 << ". " << patient.services[i] << std::endl;
-    }
-    os << "-----------------------------------" << std::endl;
+    os << "Пациент: " << patient.name
+       << " | Карта: " << (patient.has_card ? "есть" : "нет")
+       << " | Записей: " << patient.services.size()
+       << " | Итого: " << patient.total_service_count() << " руб.";
     return os;
 }
-
-Patient& Patient::operator+=(const Service& service) {
-    if (services_count >= 10) {
-        std::cout << "Невозможно добавить услугу: список полон." << std::endl;
-        return *this;
-    }
-
-    for (int i = 0; i < services_count; i++) {
-        if (services[i] == service) {
-            std::cout << "Услуга \"" << service.get_serve() << "\" уже добавлена пациенту!" << std::endl;
-            return *this;
-        }
-    }
-
-    services[services_count] = service;
-    services_count++;
-    return *this;
-}
-
-Patient& Patient::operator-=(const Service& service) {
-    for (int i = 0; i < services_count; i++) {
-        if (services[i] == service) {
-            for (int j = i; j < services_count - 1; j++) {
-                services[j] = services[j + 1];
-            }
-            services_count--;
-            std::cout << "Услуга \"" << service.get_serve() << "\" удалена." << std::endl;
-            return *this;
-        }
-    }
-    std::cout << "Услуга \"" << service.get_serve() << "\" не найдена, удаление невозможно." << std::endl;
-    return *this;
-}
-
 

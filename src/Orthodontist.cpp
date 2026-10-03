@@ -1,4 +1,4 @@
-#include "../include/Orthodontis.h"
+#include "../include/Orthodontist.h"
 
 Orthodontist::Orthodontist() : Doctor(), braces_patients(0) {}
 

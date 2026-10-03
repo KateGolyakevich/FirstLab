@@ -1,5 +1,5 @@
-#ifndef ORTHODONTIS_H
-#define ORTHODONTIS_H
+#ifndef ORTHODONTIST_H
+#define ORTHODONTIST_H
 
 #include "Doctor.h"
 
@@ -15,10 +15,9 @@ class Orthodontist : public Doctor {
     int get_braces_patients() const;
     void set_braces_patients(int braces_patients);
 
-    std::string get_specialization() const override;
-    void print() const override;
+    std::string get_doctor_type() const override;
 
-    friend std::ostream& operator<<(std::ostream& os, const Orthodontist& ororthodontist);
+    friend std::ostream& operator<<(std::ostream& os, const Orthodontist& orthodontist);
 };
 
-#endif //ORTHODONTIS_H
+#endif

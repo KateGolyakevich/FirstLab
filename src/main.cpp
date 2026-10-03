@@ -1,60 +1,63 @@
 #include <iostream>
+#include "../include/TherapeuticService.h"
+#include "../include/SurgicalService.h"
+#include "../include/OrthodonticService.h"
+#include "../include/Therapist.h"
+#include "../include/Surgeon.h"
+#include "../include/Orthodontist.h"
 #include "../include/Patient.h"
-#include "../include/Service.h"
 
 int main() {
 
-    std::cout << "---Создание услуг---" << std::endl;
-    Service serve_first("Удаление кариеса", "Иванов И.И.", 500, 45);
-    Service serve_second("Рентген", "Петров П.П.", 1200, 20);
-    Service serve_third("Протезирование", "Сидорова А.А.", 8000, 40);
+    std::cout << "--- Врачи клиники ---\n";
+    Therapist    therapist("Иванов И.И.", 12, 340);
+    Surgeon      surgeon("Петров П.П.", 18, 95);
+    Orthodontist orthodontist("Сидорова А.А.", 8, 47);
 
-    std::cout << serve_first << std::endl;
-    std::cout << serve_second << std::endl;
-    std::cout << serve_third << std::endl;
+    std::cout << therapist    << "\n";
+    std::cout << surgeon      << "\n";
+    std::cout << orthodontist << "\n";
 
-    std::cout << "\n---Сравнение по цене---" << std::endl;
-    if (serve_second > serve_first) {
-        std::cout << "Услуга: " << serve_second.get_serve() << " дороже " << serve_first.get_serve()<< std::endl;
-    }else {
-        std::cout << "Услуга: " << serve_second.get_serve() << " дешевле " << serve_first.get_serve()<< std::endl;
-    }
+    std::cout << "\n--- Полиморфизм через Doctor* ---\n";
+    Doctor* doctor = &surgeon;
+    std::cout << *doctor << "\n";
 
-    std::cout << "\n---Сравнение двух услуг по характеристикам:---" << std::endl;
-    Service serve_fourth("Удаление кариеса", "Иванов И.И.", 550, 15);
-    if (serve_first == serve_fourth) {
-        std::cout << "Это одна и та же услуга." << std::endl;
-    } else {
-        std::cout << "Услуги разные." << std::endl;
-    }
+    std::cout << "\n--- Услуги клиники ---\n";
+    TherapeuticService therapy("Лечение кариеса", 2500, 60, "36", false);
+    SurgicalService    surgical("Удаление зуба мудрости", 4000, 40,
+                               "удаление", "саморассасывающийся");
+    OrthodonticService braces("Установка брекетов", 30000, 90,
+                              "брекеты", "керамика");
 
-    if (is_expensive(serve_second, 1000)) {
-        std::cout << "Услуга " << serve_second.get_serve() << " является дорогой (>1000)." << std::endl;
-    }
+    std::cout << therapy << "\n";
+    std::cout << surgical << "\n";
+    std::cout << braces  << "\n";
 
-    std::cout << "\n---Создание новой услуги ---" << std::endl;
-    Service serve_five;
-    std::cin >> serve_five;
-    std::cout << "\nВы ввели: " << serve_five << std::endl;
+    std::cout << "\n--- Полиморфизм через Service* ---\n";
+    Service* service = &braces;
+    std::cout << *service << "\n";
 
-    Patient patient("Смирнов Алексей Владимирович");
+    std::cout << "\n\n>>> Пациент БЕЗ карты\n";
+    Patient patient_first("Иванов И.И.", false);
+    patient_first += new TherapeuticService("Лечение кариеса (первичное)", 2500, 60, "36", false);
+    patient_first += new TherapeuticService("Лечение кариеса (повторное)",  2500, 60, "36", true);
+    patient_first += new SurgicalService("Удаление зуба", 4000, 40,
+                              "удаление", "саморассасывающийся");
 
-    patient += serve_first;
-    patient += serve_second;
-    patient += serve_third;
+    std::cout << patient_first << "\n";
 
-    std::cout << "\nПытаемся добавить дубликат " << serve_first.get_serve() << std::endl;
-    patient += serve_first;
+    std::cout << "\n>>> Пациент С картой\n";
+    Patient patient_second("Петров П.П.", true);
+    patient_second += new TherapeuticService("Лечение кариеса (первичное)", 2500, 60, "36", false);
+    patient_second += new TherapeuticService("Лечение кариеса (повторное)",  2500, 60, "36", true);
+    patient_second += new SurgicalService("Удаление зуба", 4000, 40,
+                              "удаление", "саморассасывающийся");
 
-    std::cout << "\nТекущее состояние пациента:" << std::endl;
-    std::cout << patient;
+    std::cout << patient_second << "\n";
 
-    std::cout << "\nУдаляем услугу " << serve_second.get_serve() << std::endl;
-    patient -= serve_second;
-
-    std::cout << "\nСостояние после удаления:" << std::endl;
-    std::cout << patient;
-
+    std::cout << "\n>>> Тот же пациент, но теперь у него появилась карта\n";
+    patient_first.set_has_card(true);
+    std::cout << patient_first << "\n";
 
     return 0;
 }
