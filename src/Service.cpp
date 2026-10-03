@@ -16,7 +16,7 @@ void Service::set_cost(int cost) {if (this->cost > 0) this->cost = cost;}
 void Service::set_duration(int duration) {if (this->duration > 0) this->duration = duration;}
 
 std::string Service::get_serve_type() const {return "Общая услуга";}
-int Service::get_total_cost()const {return cost;}
+bool Service::is_repeated_service() const {return false;}
 
 std::ostream& operator<<(std::ostream& os, const Service& service) {
     os << "\n | " << service.get_serve_type()

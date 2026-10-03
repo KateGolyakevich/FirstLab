@@ -24,7 +24,7 @@ class Service{
     void set_duration(int duration);
 
     virtual std::string get_serve_type()const;
-    virtual int get_total_cost() const;
+    virtual bool is_repeated_service() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Service& service);
 };
