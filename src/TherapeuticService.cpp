@@ -1,7 +1,8 @@
 #include "../include/TherapeuticService.h"
 
 TherapeuticService::TherapeuticService() : Service(), tooth_number(""), is_repeated(false){}
-TherapeuticService::TherapeuticService(std::string serve, int cost, int duration, std::string tooth_number, bool is_repeated) {}
+TherapeuticService::TherapeuticService(std::string serve, int cost, int duration, std::string tooth_number, bool is_repeated)
+    : Service(serve, cost, duration), tooth_number(tooth_number), is_repeated(is_repeated){}
 TherapeuticService::~TherapeuticService(){}
 
 std::string TherapeuticService::get_tooth_number() const {return tooth_number;}

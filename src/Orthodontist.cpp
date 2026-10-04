@@ -11,7 +11,7 @@ int Orthodontist::get_braces_patients() const { return braces_patients; }
 void Orthodontist::set_braces_patients(int braces_patients) { if (braces_patients >= 0)
     this->braces_patients = braces_patients;}
 
-std::string Orthodontist::get_specialization() const { return "Ортодонт"; }
+std::string Orthodontist::get_doctor_type() const { return "Ортодонт"; }
 
 std::ostream& operator<<(std::ostream& os, const Orthodontist& orthodontist) {
     os << static_cast<const Doctor&>(orthodontist)

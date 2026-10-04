@@ -25,13 +25,13 @@ int main() {
     std::cout << "\n--- Услуги клиники ---\n";
     TherapeuticService therapy("Лечение кариеса", 2500, 60, "36", false);
     SurgicalService    surgical("Удаление зуба мудрости", 4000, 40,
-                               "удаление", "саморассасывающийся");
+                               "удаление");
     OrthodonticService braces("Установка брекетов", 30000, 90,
                               "брекеты", "керамика");
 
-    std::cout << therapy << "\n";
-    std::cout << surgical << "\n";
-    std::cout << braces  << "\n";
+    std::cout << therapy;
+    std::cout << surgical;
+    std::cout << braces;
 
     std::cout << "\n--- Полиморфизм через Service* ---\n";
     Service* service = &braces;
@@ -42,7 +42,7 @@ int main() {
     patient_first += new TherapeuticService("Лечение кариеса (первичное)", 2500, 60, "36", false);
     patient_first += new TherapeuticService("Лечение кариеса (повторное)",  2500, 60, "36", true);
     patient_first += new SurgicalService("Удаление зуба", 4000, 40,
-                              "удаление", "саморассасывающийся");
+                              "удаление");
 
     std::cout << patient_first << "\n";
 
@@ -51,7 +51,7 @@ int main() {
     patient_second += new TherapeuticService("Лечение кариеса (первичное)", 2500, 60, "36", false);
     patient_second += new TherapeuticService("Лечение кариеса (повторное)",  2500, 60, "36", true);
     patient_second += new SurgicalService("Удаление зуба", 4000, 40,
-                              "удаление", "саморассасывающийся");
+                              "удаление");
 
     std::cout << patient_second << "\n";
 

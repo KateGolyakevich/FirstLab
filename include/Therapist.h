@@ -15,8 +15,7 @@ public:
     int get_filled_teeth() const;
     void set_filled_teeth(int filled_teeth);
 
-    std::string get_specialization() const override;
-    void print() const override;
+    std::string get_doctor_type() const override;
 
     friend std::ostream& operator<<(std::ostream& os, const Therapist& therapist);
 };

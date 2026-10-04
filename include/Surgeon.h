@@ -14,8 +14,7 @@ public:
     int get_operations_count() const;
     void set_operations_count(int o);
 
-    std::string get_specialization() const override;
-    void print() const override;
+    std::string get_doctor_type() const override;
 
     friend std::ostream& operator<<(std::ostream& os, const Surgeon& surgeon);
 };

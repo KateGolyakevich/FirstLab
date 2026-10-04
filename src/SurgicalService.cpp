@@ -1,7 +1,8 @@
 #include "../include/SurgicalService.h"
 
 SurgicalService::SurgicalService() : Service(), operation_type("") {}
-SurgicalService::SurgicalService(std::string serve, int cost, int duration, std::string operation_type) {}
+SurgicalService::SurgicalService(std::string serve, int cost, int duration, std::string operation_type) :
+    Service(serve, cost, duration), operation_type(operation_type){}
 SurgicalService::~SurgicalService(){}
 
 std::string SurgicalService::get_operation_type() const {return operation_type;}

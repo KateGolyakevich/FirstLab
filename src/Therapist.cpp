@@ -10,7 +10,7 @@ Therapist::~Therapist() {}
 int Therapist::get_filled_teeth() const { return filled_teeth; }
 void Therapist::set_filled_teeth(int filled_teeth) { if (filled_teeth >= 0) this->filled_teeth = filled_teeth; }
 
-std::string Therapist::get_specialization() const { return "Терапевт"; }
+std::string Therapist::get_doctor_type() const { return "Терапевт"; }
 
 std::ostream& operator<<(std::ostream& os, const Therapist& therapist) {
     os << static_cast<const Doctor&>(therapist)
