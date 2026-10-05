@@ -24,10 +24,13 @@ int main() {
 
     std::cout << "\n--- Услуги клиники ---\n";
     TherapeuticService therapy("Лечение кариеса", 2500, 60, "36", false);
+    therapy.set_doctor(&therapist);
     SurgicalService    surgical("Удаление зуба мудрости", 4000, 40,
                                "удаление");
+    surgical.set_doctor(&surgeon);
     OrthodonticService braces("Установка брекетов", 30000, 90,
                               "брекеты", "керамика");
+    braces.set_doctor(&orthodontist);
 
     std::cout << therapy;
     std::cout << surgical;
