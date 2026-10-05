@@ -27,7 +27,7 @@ class Patient {
 
     void add_service(Service* service);
 
-    int total_service_count() const;  // итог с учётом скидки
+    int total_service_count() const;
 
     Patient& operator+=(Service* service);
     Patient& operator-=(Service* service);

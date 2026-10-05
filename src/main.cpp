@@ -31,7 +31,7 @@ int main() {
 
     std::cout << therapy;
     std::cout << surgical;
-    std::cout << braces;
+    std::cout << braces << "\n";
 
     std::cout << "\n--- Полиморфизм через Service* ---\n";
     Service* service = &braces;
