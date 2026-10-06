@@ -4,13 +4,13 @@
 #include "Service.h"
 
 class TherapeuticService : public Service {
-    private:
+private:
     std::string tooth_number;
     bool is_repeated;
-    public:
+public:
     TherapeuticService();
     TherapeuticService(std::string serve, int cost, int duration,
-        std::string tooth_number, bool is_repeated);
+        std::string tooth_number, bool is_repeated, Doctor* doctor = nullptr);
     ~TherapeuticService() override;
 
     std::string get_tooth_number()const;
@@ -18,6 +18,8 @@ class TherapeuticService : public Service {
 
     void set_tooth_number(const std::string& tooth_number);
     void set_repeat(bool is_repeat);
+
+    bool can_accept(Doctor* doctor) const override;
 
     std::string get_serve_type()const override;
     bool is_repeated_service() const override;

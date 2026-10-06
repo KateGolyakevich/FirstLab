@@ -4,17 +4,18 @@
 #include "Service.h"
 
 class SurgicalService:public Service {
-    private:
+private:
     std::string operation_type;
-    public:
+public:
     SurgicalService();
     SurgicalService(std::string serve, int cost, int duration,
-        std::string operation_type);
+        std::string operation_type, Doctor* doctor = nullptr);
     ~SurgicalService() override;
 
     std::string get_operation_type() const;
-
     void set_operation_type(const std::string& operation_type);
+
+    bool can_accept(Doctor* doctor) const override;
 
     std::string get_serve_type() const override;
 
