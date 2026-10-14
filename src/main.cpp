@@ -1,66 +1,69 @@
 #include <iostream>
-#include "../include/TherapeuticService.h"
-#include "../include/SurgicalService.h"
-#include "../include/OrthodonticService.h"
+#include <vector>
 #include "../include/Therapist.h"
 #include "../include/Surgeon.h"
 #include "../include/Orthodontist.h"
+
+#include "../include/TherapeuticService.h"
+#include "../include/SurgicalService.h"
+#include "../include/OrthodonticService.h"
+
 #include "../include/Patient.h"
 
 int main() {
-
-    std::cout << "--- Врачи клиники ---\n";
-    Therapist    therapist("Иванов И.И.", 12, 340);
-    Surgeon      surgeon("Петров П.П.", 18, 95);
+    // 1. Создаем врачей клиники
+    Therapist therapist("Иванов И.И.", 12, 340);
+    Surgeon surgeon("Петров П.П.", 10, 95);
     Orthodontist orthodontist("Сидорова А.А.", 8, 47);
 
-    std::cout << therapist    << "\n";
-    std::cout << surgeon      << "\n";
-    std::cout << orthodontist << "\n";
+    std::cout << "--- Врачи клиники ---\n";
+    std::cout << therapist << "\n";
+    std::cout << surgeon << "\n";
+    std::cout << orthodontist << "\n\n";
 
-    std::cout << "\n--- Полиморфизм через Doctor* ---\n";
-    Doctor* doctor = &surgeon;
-    std::cout << *doctor << "\n";
+    // 2. Создаем услуги с привязкой к конкретным врачам
+    TherapeuticService therapy("Лечение кариеса", 2500, 60, "36", false, &therapist);
+    SurgicalService surgery("Удаление зуба мудрости", 4000, 40, "Удаление", &surgeon);
+    OrthodonticService orthodontic("Установка брекетов", 50000, 90, "брекеты", "керамика", &orthodontist);
 
-    std::cout << "\n--- Услуги клиники ---\n";
-    TherapeuticService therapy("Лечение кариеса", 2500, 60, "36", false);
-    therapy.set_doctor(&therapist);
-    SurgicalService    surgical("Удаление зуба мудрости", 4000, 40,
-                               "удаление");
-    surgical.set_doctor(&surgeon);
-    OrthodonticService braces("Установка брекетов", 30000, 90,
-                              "брекеты", "керамика");
-    braces.set_doctor(&orthodontist);
+    std::cout << "--- Услуги клиники (с назначенными врачами) ---\n";
+    std::cout << therapy << "\n";
+    std::cout << surgery << "\n";
+    std::cout << orthodontic << "\n\n";
 
-    std::cout << therapy;
-    std::cout << surgical;
-    std::cout << braces << "\n";
+    // 4. Демонстрация проверки соответствия врача и услуги (can_accept / set_doctor)
+    std::cout << "--- Проверка привязки специалистов к услугам ---\n";
+    TherapeuticService test_service("Чистка каналов", 3000, 50, "12", true);
 
-    std::cout << "\n--- Полиморфизм через Service* ---\n";
-    Service* service = &braces;
-    std::cout << *service << "\n";
+    std::cout << "Попытка назначить Хирурга на терапию:\n";
+    if (!test_service.set_doctor(&surgeon)) {
+        std::cout << "-> Ошибка: Хирург не может вести терапевтический приём!\n";
+    }
 
-    std::cout << "\n\n>>> Пациент БЕЗ карты\n";
+    std::cout << "Попытка назначить Терапевта на терапию:\n";
+    if (test_service.set_doctor(&therapist)) {
+        std::cout << "-> Успешно: " << therapist.get_name() << " назначен на услугу.\n";
+    }
+    std::cout << test_service << "\n\n";
+
+    // 5. Демонстрация работы с Пациентами и расчета скидки
+    // Пациент 1: БЕЗ скидочной карты
     Patient patient_first("Иванов И.И.", false);
-    patient_first += new TherapeuticService("Лечение кариеса (первичное)", 2500, 60, "36", false);
-    patient_first += new TherapeuticService("Лечение кариеса (повторное)",  2500, 60, "36", true);
-    patient_first += new SurgicalService("Удаление зуба", 4000, 40,
-                              "удаление");
+    patient_first.add_service(new TherapeuticService("Лечение", 2500, 60, "36", true, &therapist));
+    patient_first.add_service(new SurgicalService("Удаление", 4000, 40, "удаление", &surgeon));
+    patient_first.add_service(new TherapeuticService("Пломбирование", 2500, 30, "11", false, &therapist));
 
-    std::cout << patient_first << "\n";
+    std::cout << ">>> Пациент БЕЗ карты\n";
+    std::cout << patient_first << "\n\n";
 
-    std::cout << "\n>>> Пациент С картой\n";
+    // Пациент 2: С картой клиники (скидка 2% на повторные приемы)
     Patient patient_second("Петров П.П.", true);
-    patient_second += new TherapeuticService("Лечение кариеса (первичное)", 2500, 60, "36", false);
-    patient_second += new TherapeuticService("Лечение кариеса (повторное)",  2500, 60, "36", true);
-    patient_second += new SurgicalService("Удаление зуба", 4000, 40,
-                              "удаление");
+    patient_second.add_service(new TherapeuticService("Лечение", 2500, 60, "36", true, &therapist));
+    patient_second.add_service(new SurgicalService("Удаление", 4000, 40, "удаление", &surgeon));
+    //patient_second.add_service(new TherapeuticService("Пломбирование", 2500, 30, "11", false, &therapist));
 
-    std::cout << patient_second << "\n";
-
-    std::cout << "\n>>> Тот же пациент, но теперь у него появилась карта\n";
-    patient_first.set_has_card(true);
-    std::cout << patient_first << "\n";
+    std::cout << ">>> Пациент С картой\n";
+    std::cout << patient_second << "\n\n";
 
     return 0;
 }
