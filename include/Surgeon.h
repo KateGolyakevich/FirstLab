@@ -15,7 +15,8 @@ public:
     void set_operations_count(int o);
 
     std::string get_doctor_type() const override;
-
-    friend std::ostream& operator<<(std::ostream& os, const Surgeon& surgeon);
+    double get_coefficient() const override;
+    void perform_procedure() const override;
+    void print_info(std::ostream& os) const override;
 };
 #endif //SURGEON_H
