@@ -9,14 +9,16 @@ private:
 
 public:
     Therapist();
-    Therapist(std::string name, int experience, int filled);
+    Therapist(std::string name, int experience, int filled_teeth);
     ~Therapist() override;
 
     int get_filled_teeth() const;
     void set_filled_teeth(int filled_teeth);
 
     std::string get_doctor_type() const override;
+    double get_coefficient() const override;
+    void perform_procedure() const override;
+    void print_info(std::ostream& os) const override;
 
-    friend std::ostream& operator<<(std::ostream& os, const Therapist& therapist);
 };
 #endif //THERAPIST_H
