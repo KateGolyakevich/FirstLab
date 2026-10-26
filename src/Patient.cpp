@@ -6,33 +6,41 @@ Patient::Patient(const std::string& name, bool has_card)
     : name(name), has_card(has_card) {}
 
 Patient::~Patient() {
-    for (auto* service : services) delete service;
+    for (auto* service : services) {
+        delete service;
+    }
     services.clear();
 }
 
 std::string Patient::get_name() const { return name; }
 void Patient::set_name(const std::string& name) { this->name = name; }
-
 bool Patient::get_has_card() const { return has_card; }
 void Patient::set_has_card(bool has_card) { this->has_card = has_card; }
-
 int Patient::get_service_count() const { return static_cast<int>(services.size()); }
 
 void Patient::add_service(Service* service) {
     if (service) services.push_back(service);
 }
 
-int Patient::total_service_count() const {
+// Полиморфный расчет общей стоимости с учетом персональной скидки
+int Patient::total_service_cost() const {
     int total = 0;
-    for (auto* service : services) {
+    for (const auto* service : services) {
         int price = service->get_cost();
-
         if (has_card && service->is_repeated_service()) {
-            price = static_cast<int>(price * 0.98);
+            price = static_cast<int>(price * 0.98); // скидка 2%
         }
         total += price;
     }
     return total;
+}
+
+// Полиморфное выполнение всех назначенных процедур
+void Patient::execute_all_services() const {
+    std::cout << "\n--- Выполнение плана лечения пациента: " << name << " ---" << std::endl;
+    for (const auto* service : services) {
+        service->execute_service();
+    }
 }
 
 Patient& Patient::operator+=(Service* service) {
@@ -45,7 +53,7 @@ Patient& Patient::operator-=(Service* service) {
         if (*it == service) {
             delete *it;
             services.erase(it);
-            std::cout << "Услуга удалена." << std::endl;
+            std::cout << "Услуга успешно удалена." << std::endl;
             return *this;
         }
     }
@@ -55,9 +63,11 @@ Patient& Patient::operator-=(Service* service) {
 
 std::ostream& operator<<(std::ostream& os, const Patient& patient) {
     os << "Пациент: " << patient.name
-       << " | Карта: " << (patient.has_card ? "есть" : "нет")
-       << " | Записей: " << patient.services.size()
-       << " | Итого: " << patient.total_service_count() << " руб.";
+       << " | Карта клиники: " << (patient.has_card ? "Есть" : "Нет")
+       << " | Услуг назначено: " << patient.services.size()
+       << " | Итого к оплате: " << patient.total_service_cost() << " руб.\n";
+    for (size_t i = 0; i < patient.services.size(); ++i) {
+        os << "  " << (i + 1) << ". " << *(patient.services[i]) << "\n";
+    }
     return os;
 }
-
