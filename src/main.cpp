@@ -11,7 +11,6 @@
 #include "../include/Patient.h"
 
 int main() {
-    // 1. Создаем врачей клиники
     Therapist therapist("Иванов И.И.", 12, 340);
     Surgeon surgeon("Петров П.П.", 10, 95);
     Orthodontist orthodontist("Сидорова А.А.", 8, 47);

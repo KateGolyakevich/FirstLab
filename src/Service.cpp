@@ -20,7 +20,6 @@ int Service::get_cost()const {
     return cost;
 }
 
-
 int Service::get_duration()const {return duration;}
 Doctor* Service::get_doctor() const { return doctor; }
 
