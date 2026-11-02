@@ -20,7 +20,6 @@ int main() {
     std::cout << surgeon << "\n";
     std::cout << orthodontist << "\n\n";
 
-    // 2. Создаем услуги с привязкой к конкретным врачам
     TherapeuticService therapy("Лечение кариеса", 2500, 60, "36", false, &therapist);
     SurgicalService surgery("Удаление зуба мудрости", 4000, 40, "Удаление", &surgeon);
     OrthodonticService orthodontic("Установка брекетов", 50000, 90, "брекеты", "керамика", &orthodontist);
@@ -30,7 +29,6 @@ int main() {
     std::cout << surgery << "\n";
     std::cout << orthodontic << "\n\n";
 
-    // 4. Демонстрация проверки соответствия врача и услуги (can_accept / set_doctor)
     std::cout << "--- Проверка привязки специалистов к услугам ---\n";
     TherapeuticService test_service("Чистка каналов", 3000, 50, "12", true);
 
