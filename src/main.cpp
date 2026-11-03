@@ -10,110 +10,128 @@
 #include "../include/Patient.h"
 
 int main() {
-    std::cout << "====================================================================\n";
-    std::cout << " 1. ТЕСТИРОВАНИЕ Collection<T> С БАЗОВЫМИ ТИПАМИ (int)\n";
-    std::cout << "====================================================================\n";
+    std::cout << "===========================\n";
+    std::cout << " 1. КАТАЛОГ ВРАЧЕЙ КЛИНИКИ: \n";
+    std::cout << "===========================\n";
 
-    Collection<int> numbers;
-    numbers.add(10);
-    numbers.add(45);
-    numbers.add(80);
-    numbers.add(15);
-    numbers.add(99);
+    // Создаем коллекцию врачей клиники на базе нашего шаблона
+    Collection<Doctor*> clinic_doctors;
 
-    std::cout << "Коллекция чисел (размер: " << numbers.get_size() << "):\n" << numbers;
+    Doctor* doc_therapist = new Therapist("Иванов И.И.", 8, 420);
+    Doctor* doc_surgeon   = new Surgeon("Петров П.П.", 15, 310);
+    Doctor* doc_ortho     = new Orthodontist("Сидорова А.А.", 6, 85);
 
-    // Шаблонный поиск по предикату
-    int idx = find_if(numbers, [](int x) { return x > 50; });
-    std::cout << "Первый элемент > 50 найден на позиции [" << idx << "]: " << numbers[idx] << "\n";
+    clinic_doctors.add(doc_therapist);
+    clinic_doctors.add(doc_surgeon);
+    clinic_doctors.add(doc_ortho);
 
-    // Шаблонная фильтрация
-    Collection<int> even_numbers = filter_collection(numbers, [](int x) { return x % 2 == 0; });
-    std::cout << "\nОтфильтрованные чётные числа:\n" << even_numbers;
+    std::cout << "Штат врачей клиники (всего специалистов: " << clinic_doctors.get_size() << "):\n";
+    std::cout << clinic_doctors << "\n";
 
-    // Удаление элемента
-    numbers.remove(45);
-    std::cout << "После удаления числа 45:\n" << numbers;
-
-    std::cout << "\n====================================================================\n";
-    std::cout << " 2. ТЕСТИРОВАНИЕ Collection<Doctor*> (ПОЛЬЗОВАТЕЛЬСКИЙ ТИП 1)\n";
-    std::cout << "====================================================================\n";
-
-    Collection<Doctor*> doctors;
-    Doctor* d1 = new Therapist("Иванов И.И.", 10, 520);
-    Doctor* d2 = new Surgeon("Петров П.П.", 16, 210);
-    Doctor* d3 = new Orthodontist("Сидорова А.А.", 7, 95);
-    Doctor* d4 = new Therapist("Васильев В.В.", 3, 80);
-
-    doctors.add(d1);
-    doctors += d2;
-    doctors += d3;
-    doctors += d4;
-
-    std::cout << "Штат врачей клиники (размер: " << doctors.get_size() << "):\n" << doctors;
-
-    // Поиск врача со стажем >= 10 лет
-    int docktor_index = find_if(doctors, [](Doctor* d) { return d->get_experience() >= 10; });
-    if (docktor_index != -1) {
-        std::cout << "Первый опытный специалист (стаж >= 10): " << doctors[docktor_index]->get_name() << "\n";
-    }
-
-    // Подсчет среднего коэффициента через шаблонную функцию
-    double total_coefficient = calculate_sum(doctors, [](Doctor* d) { return d->get_coefficient(); });
-    std::cout << "Суммарный коэффициент штата: " << total_coefficient
-              << " (средний: " << total_coefficient / doctors.get_size() << ")\n";
-
-    std::cout << "\n====================================================================\n";
-    std::cout << "====================================================================\n";
-
-    Collection<Service*> clinic_services;
-    clinic_services.add(new TherapeuticService("Пломбирование зуба", 2500, 40, "24", false, d1));
-    clinic_services.add(new SurgicalService("Удаление ретинированного зуба", 5000, 60, "Экстракция", d2));
-    clinic_services.add(new OrthodonticService("Установка брекет-системы", 65000, 120, "Брекеты", "Керамика", d3));
-    clinic_services.add(new TherapeuticService("Повторное лечение канала", 3200, 50, "24", true, d1));
-
-    std::cout << "Прейскурант услуг клиники:\n" << clinic_services;
-
-    // Фильтрация услуг стоимостью выше 4000 руб.
-    Collection<Service*> expensive_services = filter_collection(clinic_services, [](Service* s) {
-        return s->get_cost() > 4000;
+    // Использование шаблонной функции: поиск профильного специалиста по предикату
+    int surgeon_idx = find_if(clinic_doctors, [](Doctor* d) {
+        return d->get_doctor_type() == "Хирург";
     });
-    std::cout << "\nУслуги стоимостью выше 4000 руб.:\n" << expensive_services;
 
-    // Подсчет общей стоимости каталога услуг
-    double total_price = calculate_sum(clinic_services, [](Service* s) { return s->get_cost(); });
-    std::cout << "Общая стоимость всех услуг в каталоге: " << total_price << " руб.\n";
-
-    std::cout << "\n====================================================================\n";
-    std::cout << " 4. ТЕСТИРОВАНИЕ Collection<Patient> (ПОЛЬЗОВАТЕЛЬСКИЙ ТИП 3)\n";
-    std::cout << "====================================================================\n";
-
-    Collection<Patient> patients;
-    Patient p1("Смирнов К.А.", true);
-    p1 += clinic_services[0];
-    p1 += clinic_services[3];
-
-    Patient p2("Ковалёва Е.С.", false);
-    p2 += clinic_services[1];
-
-    patients.add(p1);
-    patients.add(p2);
-
-    std::cout << "Список пациентов:\n" << patients;
-
-    // Проверка генерации и обработки исключений
-    std::cout << "\nПроверка безопасного метода at():\n";
-    try {
-        std::cout << "Попытка доступа к элементу [10]...\n";
-        patients.at(10);
-    } catch (const std::out_of_range& e) {
-        std::cout << "[Успешный перехват исключения]: " << e.what() << "\n";
+    if (surgeon_idx != -1) {
+        std::cout << "Найден дежурный хирург для сложных операций: "
+                  << clinic_doctors[surgeon_idx]->get_name() << "\n\n";
     }
 
-    // Освобождение динамической памяти
-    for (size_t i = 0; i < doctors.get_size(); ++i) delete doctors[i];
-    for (size_t i = 0; i < clinic_services.get_size(); ++i) delete clinic_services[i];
+    std::cout << "================================\n";
+    std::cout << " 2. ПЛАН ЛЕЧЕНИЯ ПАЦИЕНТА: \n";
+    std::cout << "================================\n";
 
-    std::cout << "\nПрограмма успешно завершена. Ресурсы очищены.\n";
+    Collection<Service*> patient_treatment_plan;
+
+    Service* s1 = new TherapeuticService("Лечение глубокого кариеса", 2800, 45, "16", false, doc_therapist);
+    Service* s2 = new SurgicalService("Сложное удаление зуба мудрости", 4500, 40, "Экстракция ретинированного зуба", doc_surgeon);
+    Service* s3 = new TherapeuticService("Повторная чистка и пломбировка каналов", 3200, 50, "16", true, doc_therapist);
+    Service* s4 = new OrthodonticService("Установка брекет-системы", 60000, 90, "Брекеты", "Керамика", doc_ortho);
+
+    // 1. Добавление услуг в план лечения пациента (через метод add и оператор +=)
+    std::cout << "-> Формирование плана лечения (добавление 3 услуг)...\n";
+    patient_treatment_plan.add(s1);
+    patient_treatment_plan.add(s2);
+    patient_treatment_plan += s3; // Добавление через оператор +=
+
+    std::cout << "Текущий план лечения пациента (назначено услуг: " << patient_treatment_plan.get_size() << "):\n";
+    std::cout << patient_treatment_plan << "\n";
+
+    // 2. Добавление новой услуги пациенту в процессе лечения
+    std::cout << "-> Пациент обратился с жалобой на прикус. Добавляем ортодонтию:\n";
+    patient_treatment_plan.add(s4);
+    std::cout << "Обновлённый план лечения (услуг: " << patient_treatment_plan.get_size() << "):\n";
+    std::cout << patient_treatment_plan << "\n";
+
+    // 3. Расчет стоимости плана с помощью шаблонной функции calculate_sum
+    double total_cost = calculate_sum(patient_treatment_plan, [](Service* s) {
+        return s->get_cost();
+    });
+    std::cout << "Итоговая стоимость всех запланированных процедур: " << total_cost << " руб.\n\n";
+
+    // 4. Поиск услуги в плане лечения по предикату
+    int repeated_idx = find_if(patient_treatment_plan, [](Service* s) {
+        return s->is_repeated_service();
+    });
+    if (repeated_idx != -1) {
+        std::cout << "В плане найдена повторная процедура на позиции [" << repeated_idx << "]: \""
+                  << patient_treatment_plan[repeated_idx]->get_serve() << "\"\n";
+    }
+
+    // 5. Удаление услуги из плана лечения (пациент решил перенести удаление зуба)
+    std::cout << "\n-> Пациент отказался от операции по удалению зуба. Удаляем услугу из плана...\n";
+    bool removed = patient_treatment_plan.remove(s2);
+    if (removed) {
+        std::cout << "[Успех] Хирургическая операция исключена из плана лечения.\n";
+    }
+
+    std::cout << "\nПлан лечения после удаления услуги (осталось услуг: " << patient_treatment_plan.get_size() << "):\n";
+    std::cout << patient_treatment_plan << "\n";
+
+    // 6. Шаблонная фильтрация: выделить из оставшихся процедур только терапевтические
+    Collection<Service*> therapy_only = filter_collection(patient_treatment_plan, [](Service* s) {
+        return s->get_serve_type() == "Терапия";
+    });
+    std::cout << "Отфильтрованные процедуры терапевтического профиля:\n";
+    std::cout << therapy_only << "\n";
+
+    std::cout << "=====================================\n";
+    std::cout << " 3. КАРТОТЕКА ПАЦИЕНТОВ КЛИНИКИ:\n";
+    std::cout << "=====================================\n";
+
+    // Шаблонный контейнер для хранения объектов пациентов (по значению)
+    Collection<Patient> clinic_registry;
+
+    Patient patient_first("Иванов Петр Сергеевич", true);   // С картой клиники
+    Patient patient_smirnova("Смирнова Анна Игоревна", false); // Без карты
+
+    // Прикрепляем услуги к карточке пациента
+    patient_first += patient_treatment_plan[0];
+    patient_first += patient_treatment_plan[1];
+    patient_smirnova += s2;
+
+    // Добавляем пациентов в картотеку клиники
+    clinic_registry.add(patient_first);
+    clinic_registry.add(patient_smirnova);
+
+    std::cout << "Реестр зарегистрированных пациентов клиники (всего: " << clinic_registry.get_size() << "):\n";
+    std::cout << clinic_registry << "\n";
+
+    std::cout << "\n-> Очистка каталогов и освобождение динамической памяти...\n";
+
+    delete s1;
+    delete s2;
+    delete s3;
+    delete s4;
+
+    for (size_t i = 0; i < clinic_doctors.get_size(); ++i) {
+        delete clinic_doctors[i];
+    }
+    clinic_doctors.clear();
+    patient_treatment_plan.clear();
+    clinic_registry.clear();
+
+    std::cout << "Все коллекции очищены. Программа завершена штатно.\n";
     return 0;
 }
