@@ -17,6 +17,10 @@ public:
     explicit Patient(const std::string& name, bool has_card = false);
     ~Patient();
 
+    // Правило трёх/пяти для безопасного копирования внутри шаблона Collection
+    Patient(const Patient& other);
+    Patient& operator=(const Patient& other);
+
     std::string get_name() const;
     void set_name(const std::string& name);
     bool get_has_card() const;
@@ -25,10 +29,9 @@ public:
 
     void add_service(Service* service);
     int total_service_cost() const;
-    void execute_all_services() const;
 
     Patient& operator+=(Service* service);
-    Patient& operator-=(Service* service);
+    bool operator==(const Patient& other) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Patient& patient);
 };
