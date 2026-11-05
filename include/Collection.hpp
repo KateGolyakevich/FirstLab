@@ -24,7 +24,7 @@ private:
     }
 
 public:
-    Collection(size_t initial_capacity = 4)
+    Collection(size_t initial_capacity = 4) //конструктор по умолчанию
         : capacity(initial_capacity), size(0) {
         if (capacity == 0) capacity = 1;
         data = new T[capacity];
@@ -35,7 +35,7 @@ public:
         delete[] data;
     }
 
-    // Конструктор копирования (Deep Copy)
+    // Конструктор копирования
     Collection(const Collection& other)
         : capacity(other.capacity), size(other.size) {
         data = new T[capacity];
@@ -44,7 +44,7 @@ public:
         }
     }
 
-
+    //оператор копирования
     Collection& operator=(const Collection& other) {
         if (this != &other) {
             delete[] data;
@@ -80,7 +80,6 @@ public:
         return *this;
     }
 
-    // 1. Добавление объекта
     void add(const T& item) {
         if (size >= capacity) {
             resize(capacity * 2);
@@ -193,7 +192,7 @@ std::ostream& operator<<(std::ostream& os, const Collection<U>& col) {
     return os;
 }
 
-// Шаблонная функция 1: Поиск индекса элемента по предикату
+//ш Поиск индекса элемента по предикату
 template <typename T, typename Predicate>
 int find_if(const Collection<T>& col, Predicate pred) {
     for (size_t i = 0; i < col.get_size(); ++i) {
