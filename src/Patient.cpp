@@ -1,9 +1,9 @@
 #include "../include/Patient.h"
 
-Patient::Patient() : name(""), has_card(false) {}
+Patient::Patient() : name(""), services(), has_card(false) {}
 
 Patient::Patient(const std::string& name, bool has_card)
-    : name(name), has_card(has_card) {}
+    : name(name), services(), has_card(has_card) {}
 
 Patient::~Patient() {
     services.clear();
@@ -23,18 +23,29 @@ Patient& Patient::operator=(const Patient& other) {
 
 std::string Patient::get_name() const { return name; }
 void Patient::set_name(const std::string& name) { this->name = name; }
+
 bool Patient::get_has_card() const { return has_card; }
 void Patient::set_has_card(bool has_card) { this->has_card = has_card; }
-int Patient::get_service_count() const { return static_cast<int>(services.size()); }
+
+int Patient::get_service_count() const {
+    return static_cast<int>(services.get_size());
+}
 
 void Patient::add_service(Service* service) {
-    if (service) services.push_back(service);
+    if (service != nullptr) {
+        services.add(service);
+    }
+}
+bool Patient::remove_service(Service* service) {
+    return services.remove(service);
 }
 
 int Patient::total_service_cost() const {
     int total = 0;
-    for (const auto* service : services) {
+    for (size_t i = 0; i < services.get_size(); ++i) {
+        Service* service = services[i];
         int price = service->get_cost();
+
         if (has_card && service->is_repeated_service()) {
             price = static_cast<int>(price * 0.98);
         }
@@ -44,7 +55,16 @@ int Patient::total_service_cost() const {
 }
 
 Patient& Patient::operator+=(Service* service) {
-    if (service) services.push_back(service);
+    add_service(service);
+    return *this;
+}
+
+Patient& Patient::operator-=(Service* service) {
+    if (remove_service(service)) {
+        std::cout << "[Успех] Услуга удалена из карты пациента " << name << ".\n";
+    } else {
+        std::cout << "[Ошибка] Услуга не найдена в карте пациента " << name << ".\n";
+    }
     return *this;
 }
 
@@ -55,7 +75,11 @@ bool Patient::operator==(const Patient& other) const {
 std::ostream& operator<<(std::ostream& os, const Patient& patient) {
     os << "Пациент: " << patient.name
        << " | Карта: " << (patient.has_card ? "Есть" : "Нет")
-       << " | Услуг назначено: " << patient.services.size()
-       << " | Итого к оплате: " << patient.total_service_cost() << " руб.";
+       << " | Назначено услуг: " << patient.services.get_size()
+       << " | Итого к оплате: " << patient.total_service_cost() << " руб.\n";
+
+    for (size_t i = 0; i < patient.services.get_size(); ++i) {
+        os << "    (" << (i + 1) << ") " << *(patient.services[i]) << "\n";
+    }
     return os;
 }
