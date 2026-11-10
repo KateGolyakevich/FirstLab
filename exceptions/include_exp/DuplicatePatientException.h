@@ -1,8 +1,12 @@
-//
-// Created by Kate Golyakevich on 10.11.2026.
-//
+#ifndef DUPLICATE_PATIENT_EXCEPTION_H
+#define DUPLICATE_PATIENT_EXCEPTION_H
 
-#ifndef DUPLICATEPATIENTEXCEPTION_H
-#define DUPLICATEPATIENTEXCEPTION_H
+#include "../include_exp/ClinicException.h"
+#include <string>
 
-#endif //DUPLICATEPATIENTEXCEPTION_H
+class DuplicatePatientException : public ClinicException {
+public:
+    explicit DuplicatePatientException(const std::string& patient_name);
+};
+
+#endif // DUPLICATE_PATIENT_EXCEPTION_H

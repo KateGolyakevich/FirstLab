@@ -1,3 +1,4 @@
-//
-// Created by Kate Golyakevich on 10.11.2026.
-//
+#include "../include_exp/DuplicatePatientException.h"
+
+DuplicatePatientException::DuplicatePatientException(const std::string& patient_name)
+    : ClinicException("[Ошибка регистрации] Пациент '" + patient_name + "' уже существует в картотеке клиники!") {}
