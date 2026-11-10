@@ -1,8 +1,14 @@
-//
-// Created by Kate Golyakevich on 10.11.2026.
-//
+#ifndef DOCTOR_SPECIALTY_MISMATCH_EXCEPTION_H
+#define DOCTOR_SPECIALTY_MISMATCH_EXCEPTION_H
 
-#ifndef DOCTORSPECIALTYMISMATCHEXCEPTION_H
-#define DOCTORSPECIALTYMISMATCHEXCEPTION_H
+#include "ClinicException.h"
+#include <string>
 
-#endif //DOCTORSPECIALTYMISMATCHEXCEPTION_H
+class DoctorSpecialtyMismatchException : public ClinicException {
+public:
+    DoctorSpecialtyMismatchException(const std::string& doctor_name,
+                                     const std::string& doctor_type,
+                                     const std::string& service_type);
+};
+
+#endif // DOCTOR_SPECIALTY_MISMATCH_EXCEPTION_H
