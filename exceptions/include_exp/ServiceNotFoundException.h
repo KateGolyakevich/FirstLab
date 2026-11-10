@@ -1,8 +1,12 @@
-//
-// Created by Kate Golyakevich on 10.11.2026.
-//
+#ifndef SERVICE_NOT_FOUND_EXCEPTION_H
+#define SERVICE_NOT_FOUND_EXCEPTION_H
 
-#ifndef SERVICENOTFOUNDEXCEPTION_H
-#define SERVICENOTFOUNDEXCEPTION_H
+#include "ClinicException.h"
+#include <string>
 
-#endif //SERVICENOTFOUNDEXCEPTION_H
+class ServiceNotFoundException : public ClinicException {
+public:
+    ServiceNotFoundException(const std::string& service_name, const std::string& patient_name);
+};
+
+#endif // SERVICE_NOT_FOUND_EXCEPTION_H

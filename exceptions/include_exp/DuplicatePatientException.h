@@ -1,7 +1,7 @@
 #ifndef DUPLICATE_PATIENT_EXCEPTION_H
 #define DUPLICATE_PATIENT_EXCEPTION_H
 
-#include "../include_exp/ClinicException.h"
+#include "ClinicException.h"
 #include <string>
 
 class DuplicatePatientException : public ClinicException {
