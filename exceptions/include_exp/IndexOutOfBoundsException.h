@@ -1,0 +1,8 @@
+//
+// Created by Kate Golyakevich on 10.11.2026.
+//
+
+#ifndef INDEXOUTOFBOUNDSEXCEPTION_H
+#define INDEXOUTOFBOUNDSEXCEPTION_H
+
+#endif //INDEXOUTOFBOUNDSEXCEPTION_H

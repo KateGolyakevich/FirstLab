@@ -20,4 +20,10 @@ add_executable(Lab_1 src/Patient.cpp
         src/Orthodontist.cpp
         src/Surgeon.cpp
         src/Therapist.cpp
+        exceptions/include_exp/ClinicException.h
+        exceptions/include_exp/InvalidDataException.h
+        exceptions/include_exp/DoctorSpecialtyMismatchException.h
+        exceptions/include_exp/DuplicatePatientException.h
+        exceptions/include_exp/ServiceNotFoundException.h
+        exceptions/include_exp/IndexOutOfBoundsException.h
 )

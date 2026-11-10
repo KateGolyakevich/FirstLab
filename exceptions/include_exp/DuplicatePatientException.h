@@ -1,0 +1,8 @@
+//
+// Created by Kate Golyakevich on 10.11.2026.
+//
+
+#ifndef DUPLICATEPATIENTEXCEPTION_H
+#define DUPLICATEPATIENTEXCEPTION_H
+
+#endif //DUPLICATEPATIENTEXCEPTION_H

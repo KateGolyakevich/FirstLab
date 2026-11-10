@@ -1,0 +1,8 @@
+//
+// Created by Kate Golyakevich on 10.11.2026.
+//
+
+#ifndef SERVICENOTFOUNDEXCEPTION_H
+#define SERVICENOTFOUNDEXCEPTION_H
+
+#endif //SERVICENOTFOUNDEXCEPTION_H

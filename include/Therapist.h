@@ -19,6 +19,5 @@ public:
     double get_coefficient() const override;
     void perform_procedure() const override;
     void print_info(std::ostream& os) const override;
-
-};
 #endif //THERAPIST_H
+};
