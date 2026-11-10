@@ -1,8 +1,12 @@
-//
-// Created by Kate Golyakevich on 10.11.2026.
-//
+#ifndef INDEX_OUT_OF_BOUNDS_EXCEPTION_H
+#define INDEX_OUT_OF_BOUNDS_EXCEPTION_H
 
-#ifndef INDEXOUTOFBOUNDSEXCEPTION_H
-#define INDEXOUTOFBOUNDSEXCEPTION_H
+#include "ClinicException.h"
+#include <string>
 
-#endif //INDEXOUTOFBOUNDSEXCEPTION_H
+class IndexOutOfBoundsException : public ClinicException {
+public:
+    IndexOutOfBoundsException(size_t index, size_t size);
+};
+
+#endif // INDEX_OUT_OF_BOUNDS_EXCEPTION_H
