@@ -1,4 +1,5 @@
 #include "../include/Patient.h"
+#include "../exceptions/include_exp/ServiceNotFoundException.h"
 
 Patient::Patient() : name(""), services(), has_card(false) {}
 
@@ -37,7 +38,11 @@ void Patient::add_service(Service* service) {
     }
 }
 bool Patient::remove_service(Service* service) {
-    return services.remove(service);
+    if (service == nullptr || !services.remove(service)) {
+        std::string service_title = (service != nullptr) ? service->get_serve() : "NULL";
+        throw ServiceNotFoundException(service_title, this->name);
+    }
+    return true;
 }
 
 int Patient::total_service_cost() const {
@@ -60,11 +65,7 @@ Patient& Patient::operator+=(Service* service) {
 }
 
 Patient& Patient::operator-=(Service* service) {
-    if (remove_service(service)) {
-        std::cout << "[Успех] Услуга удалена из карты пациента " << name << ".\n";
-    } else {
-        std::cout << "[Ошибка] Услуга не найдена в карте пациента " << name << ".\n";
-    }
+    remove_service(service);
     return *this;
 }
 
