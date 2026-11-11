@@ -6,7 +6,7 @@
 
 class DuplicatePatientException : public ClinicException {
 public:
-    explicit DuplicatePatientException(const std::string& patient_name);
+    DuplicatePatientException(const std::string& service_name, const std::string& patient_name);
 };
 
 #endif // DUPLICATE_PATIENT_EXCEPTION_H
