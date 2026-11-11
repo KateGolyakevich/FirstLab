@@ -1,6 +1,7 @@
 #ifndef COLLECTION_HPP
 #define COLLECTION_HPP
 
+#include "../exceptions/include_exp/IndexOutOfBoundsException.h"
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -107,17 +108,12 @@ public:
 
     // Получение по индексу с контролем выхода за границы
     T& at(size_t index) {
-        if (index >= size) {
-            throw std::out_of_range("Индекс выходит за пределы коллекции! (Index: "
-                                    + std::to_string(index) + ", Size: " + std::to_string(size) + ")");
-        }
+        if (index >= size) throw IndexOutOfBoundsException(index, size);
         return data[index];
     }
 
     const T& at(size_t index) const {
-        if (index >= size) {
-            throw std::out_of_range("Индекс выходит за пределы коллекции!");
-        }
+        if (index >= size) throw IndexOutOfBoundsException(index, size);
         return data[index];
     }
 

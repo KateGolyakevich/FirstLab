@@ -1,9 +1,13 @@
 #include "../include/Service.h"
+#include "../exceptions/include_exp/InvalidDataException.h"
+#include "../exceptions/include_exp/DoctorSpecialtyMismatchException.h"
 
 Service::Service() : serve(""), cost(0), duration(0), doctor(nullptr) {}
 
 Service::Service(std::string serve, int cost, int duration, Doctor* doctor)
-    : serve(serve), cost(cost), duration(duration), doctor(nullptr) {
+: serve(serve), cost(0), duration(0), doctor(nullptr) {
+    set_cost(cost);
+    set_duration(duration);
     if (doctor != nullptr) {
         set_doctor(doctor);
     }
@@ -17,17 +21,21 @@ Doctor* Service::get_doctor() const { return doctor; }
 
 void Service::set_serve(const std::string& serve) { this->serve = serve; }
 void Service::set_cost(int cost) { if (cost > 0) this->cost = cost; }
-void Service::set_duration(int duration) { if (duration > 0) this->duration = duration; }
+void Service::set_duration(int duration){
+    if (duration <= 0) {
+        throw InvalidDataException("duration", "Длительность процедуры должна быть положительным числом (" + std::to_string(duration) + " мин.)");
+    }
+    this->duration = duration;
+}
 
 bool Service::set_doctor(Doctor* doc) {
-    if (doc == nullptr || can_accept(doc)) {
+    if (doc == nullptr) {
         this->doctor = doc;
         return true;
     }
-    std::cout << "[Ошибка] Врач " << doc->get_name()
-              << " (" << doc->get_doctor_type()
-              << ") не имеет допуска к услуге типа: " << get_serve_type() << std::endl;
-    return false;
+    if(!can_accept(doc)){throw DoctorSpecialtyMismatchException(doc->get_name(), doc->get_doctor_type(), get_serve_type());}
+    this->doctor = doc;
+    return true;
 }
 
 int Service::get_cost() const {
