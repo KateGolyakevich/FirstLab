@@ -1,5 +1,6 @@
 #include "../include/Patient.h"
 #include "../exceptions/include_exp/ServiceNotFoundException.h"
+#include "../exceptions/include_exp/DuplicatePatientException.h"
 
 Patient::Patient() : name(""), services(), has_card(false) {}
 
@@ -33,10 +34,16 @@ int Patient::get_service_count() const {
 }
 
 void Patient::add_service(Service* service) {
-    if (service != nullptr) {
-        services.add(service);
+    if (service == nullptr) return;
+
+    for (size_t i = 0; i < services.get_size(); i++) {
+        if (services[i] == service) {
+            throw DuplicatePatientException(service->get_serve(),this->name);
+        }
     }
+    services.add(service);
 }
+
 bool Patient::remove_service(Service* service) {
     if (service == nullptr || !services.remove(service)) {
         std::string service_title = (service != nullptr) ? service->get_serve() : "NULL";
