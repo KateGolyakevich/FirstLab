@@ -92,7 +92,6 @@ public:
         return *this;
     }
 
-    // 2. Получение количества элементов и проверка на пустоту
     size_t get_size() const { return size; }
     size_t get_capacity() const { return capacity; }
     bool is_empty() const { return size == 0; }
@@ -106,7 +105,6 @@ public:
         return data[index];
     }
 
-    // Получение по индексу с контролем выхода за границы
     T& at(size_t index) {
         if (index >= size) throw IndexOutOfBoundsException(index, size);
         return data[index];
@@ -127,7 +125,6 @@ public:
         return -1;
     }
 
-    // 5. Удаление объекта по индексу
     bool remove_at(size_t index) {
         if (index >= size) return false;
         for (size_t i = index; i < size - 1; ++i) {
@@ -137,7 +134,6 @@ public:
         return true;
     }
 
-    // Удаление объекта по значению
     bool remove(const T& item) {
         int indx = find_index(item);
         if (indx != -1) {
