@@ -81,10 +81,16 @@ public:
     }
 
     void add(const T& item) {
-        if (size >= capacity) {
+        if (capacity == 0) {
+            resize(4);
+        } else if (size >= capacity) {
             resize(capacity * 2);
         }
-        data[size++] = item;
+
+        if (size < capacity) {
+            data[size] = item;
+            ++size;
+        }
     }
 
     Collection& operator+=(const T& item) {
