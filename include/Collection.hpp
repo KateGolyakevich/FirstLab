@@ -98,10 +98,16 @@ public:
 
     // 3. Получение объекта по индексу (оператор [])
     T& operator[](size_t index) {
+        if (index >= size) {
+            throw IndexOutOfBoundsException(index, size);
+        }
         return data[index];
     }
 
     const T& operator[](size_t index) const {
+        if (index >= size) {
+            throw IndexOutOfBoundsException(index, size);
+        }
         return data[index];
     }
 
