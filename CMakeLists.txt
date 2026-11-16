@@ -32,4 +32,6 @@ add_executable(Lab_1 src/Patient.cpp
         exceptions/src_exp/DuplicatePatientException.cpp
         exceptions/src_exp/ServiceNotFoundException.cpp
         exceptions/src_exp/IndexOutOfBoundsException.cpp
+        include/ClinicFileManager.h
+        src/ClinicFileManager.cpp
 )
