@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include "../include/Collection.hpp"
 #include "../include/Therapist.h"
 #include "../include/Surgeon.h"
@@ -7,102 +8,133 @@
 #include "../include/SurgicalService.h"
 #include "../include/OrthodonticService.h"
 #include "../include/Patient.h"
+#include "../include/ClinicFileManager.h"
 
-#include "../exceptions/include_exp/InvalidDataException.h"
-#include "../exceptions/include_exp/DoctorSpecialtyMismatchException.h"
-#include "../exceptions/include_exp/DuplicatePatientException.h" // или DuplicateServiceException.h
-#include "../exceptions/include_exp/ServiceNotFoundException.h"
-#include "../exceptions/include_exp/IndexOutOfBoundsException.h"
+// Вспомогательная функция безопасного ввода чисел
+int get_int_input(const std::string& prompt) {
+    int value;
+    while (true) {
+        std::cout << prompt;
+        if (std::cin >> value) {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return value;
+        }
+        std::cout << "[Ошибка ввода] Введите целое число!\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+}
+
+// Функция ручного добавления врача
+void manual_add_doctor(Collection<Doctor*>& doctors) {
+    std::cout << "\n--- Добавление врача ---\n";
+    std::cout << "1. Терапевт\n2. Хирург\n3. Ортодонт\nВыбор: ";
+    int type = get_int_input("");
+    std::cout << "Введите ФИО врача: ";
+    std::string name;
+    std::getline(std::cin, name);
+    int exp = get_int_input("Стаж работы (лет): ");
+
+    if (type == 1) {
+        int teeth = get_int_input("Вылечено зубов: ");
+        doctors.add(new Therapist(name, exp, teeth));
+    } else if (type == 2) {
+        int ops = get_int_input("Проведено операций: ");
+        doctors.add(new Surgeon(name, exp, ops));
+    } else if (type == 3) {
+        int braces = get_int_input("Пациентов с брекетами: ");
+        doctors.add(new Orthodontist(name, exp, braces));
+    } else {
+        std::cout << "Неверный тип!\n";
+        return;
+    }
+    std::cout << "[Успех] Врач добавлен в штат!\n";
+    ClinicFileManager::log_event("journal.log", "Добавлен новый врач: " + name);
+}
+
+// Функция ручного добавления пациента
+void manual_add_patient(Collection<Patient>& patients) {
+    std::cout << "\n--- Регистрация нового пациента ---\n";
+    std::cout << "Введите ФИО пациента: ";
+    std::string name;
+    std::getline(std::cin, name);
+    int card_choice = get_int_input("Есть дисконтная карта? (1 - Да, 0 - Нет): ");
+    patients.add(Patient(name, card_choice == 1));
+    std::cout << "[Успех] Пациент зарегистрирован!\n";
+    ClinicFileManager::log_event("journal.log", "Зарегистрирован пациент: " + name);
+}
 
 int main() {
-    std::cout << "=================================\n";
-    std::cout << "   СТОМАТОЛОГИЧЕСКАЯ КЛИНИКА:\n";
-    std::cout << "=================================\n\n";
+    Collection<Doctor*> doctors;
+    Collection<Service*> services;
+    Collection<Patient> patients;
 
-    Collection<Doctor*> clinic_doctors;
-    Doctor* therapist = new Therapist("Иванов И.И.", 10, 420);
-    Doctor* surgeon   = new Surgeon("Петров П.П.", 15, 310);
-    Doctor* orthodontist     = new Orthodontist("Сидорова А.А.", 7, 95);
+    // Первичная инициализация базовыми данными (если файлов ещё нет)
+    Doctor* d1 = new Therapist("Иванов И.И.", 10, 450);
+    Doctor* d2 = new Surgeon("Петров П.П.", 15, 300);
+    doctors.add(d1);
+    doctors.add(d2);
+    services.add(new TherapeuticService("Лечение кариеса", 2500, 40, "16", false, d1));
+    services.add(new SurgicalService("Удаление зуба", 4000, 30, "Экстракция", d2));
+    patients.add(Patient("Смирнов А.М.", true));
 
-    clinic_doctors.add(therapist);
-    clinic_doctors.add(surgeon);
-    clinic_doctors.add(orthodontist);
+    ClinicFileManager::log_event("journal.log", "Запуск программы стоматологической клиники.");
 
-    std::cout << "Штат врачей клиники:\n" << clinic_doctors << "\n";
+    const std::string state_file = "clinic_state.txt";
+    const std::string report_file = "clinic_report.txt";
 
-    Service* s_caries = new TherapeuticService("Лечение глубокого кариеса", 2800, 45, "16", false, therapist);
-    Service* s_wisdom = new SurgicalService("Удаление зуба мудрости", 4500, 40, "Экстракция", surgeon);
-    Service* s_braces = new OrthodonticService("Установка брекет-системы", 65000, 90, "Брекеты", "Керамика", orthodontist);
+    while (true) {
+        std::cout << "\n====================================================\n";
+        std::cout << "     СТОМАТОЛОГИЧЕСКАЯ КЛИНИКА (ЛАБОРАТОРНАЯ №7)    \n";
+        std::cout << "====================================================\n";
+        std::cout << "1. Просмотр текущего состояния системы\n";
+        std::cout << "2. Добавить врача (ручной ввод)\n";
+        std::cout << "3. Зарегистрировать пациента (ручной ввод)\n";
+        std::cout << "4. Сохранить состояние системы в файл (" << state_file << ")\n";
+        std::cout << "5. Загрузить состояние системы из файла (" << state_file << ")\n";
+        std::cout << "6. Сформировать текстовый отчёт (" << report_file << ")\n";
+        std::cout << "0. Выход из программы\n";
 
-    Patient patient1("Смирнов Алексей Михайлович", true);   // С картой скидок
-    Patient patient2("Ковалева Екатерина Сергеевна", false); // Без карты
+        int choice = get_int_input("Выберите действие: ");
 
-    patient1 += s_caries;
-    patient1 += s_wisdom;
-    patient2 += s_braces;
-
-    std::cout << "Информация о пациентах клиники:\n";
-    std::cout << patient1 << "\n";
-    std::cout << patient2 << "\n\n";
-
-    std::cout << "========================================================================\n";
-    std::cout << "========================================================================\n\n";
-
-    std::cout << ">>> ИСКЛЮЧЕНИЕ 1: InvalidDataException (отрицательный стаж врача)\n";
-    try {
-        std::cout << "Попытка задать врачу стаж -5 лет...\n";
-        therapist->set_experience(-5);
-    } catch (const InvalidDataException& e) {
-        std::cout << "[ПЕРЕХВАЧЕНО]: " << e.what() << "\n";
+        if (choice == 1) {
+            std::cout << "\n--- ШТАТ ВРАЧЕЙ ---\n" << doctors;
+            std::cout << "\n--- ПРЕЙСКУРАНТ УСЛУГ ---\n" << services;
+            std::cout << "\n--- КАРТОТЕКА ПАЦИЕНТОВ ---\n" << patients;
+        } else if (choice == 2) {
+            manual_add_doctor(doctors);
+        } else if (choice == 3) {
+            manual_add_patient(patients);
+        } else if (choice == 4) {
+            if (ClinicFileManager::save_system_state(state_file, doctors, services, patients)) {
+                std::cout << "[Успех] Состояние успешно сохранено в " << state_file << "\n";
+            } else {
+                std::cout << "[Ошибка] Не удалось записать файл!\n";
+            }
+        } else if (choice == 5) {
+            if (ClinicFileManager::load_system_state(state_file, doctors, services, patients)) {
+                std::cout << "[Успех] Состояние восстановлено из " << state_file << "\n";
+            } else {
+                std::cout << "[Ошибка] Файл не найден или повреждён!\n";
+            }
+        } else if (choice == 6) {
+            if (ClinicFileManager::generate_text_report(report_file, doctors, services, patients)) {
+                std::cout << "[Успех] Аналитический отчёт сохранён в " << report_file << "\n";
+            } else {
+                std::cout << "[Ошибка] Ошибка генерации отчёта!\n";
+            }
+        } else if (choice == 0) {
+            std::cout << "Завершение работы программы...\n";
+            ClinicFileManager::log_event("journal.log", "Штатный выход из программы.");
+            break;
+        } else {
+            std::cout << "Неверный пункт меню!\n";
+        }
     }
-    std::cout << "\n\n";
 
-    std::cout << ">>> ИСКЛЮЧЕНИЕ 2: DoctorSpecialtyMismatchException (хирург на терапию)\n";
-    try {
-        std::cout << "Попытка назначить хирурга Петрова П.П. на пломбирование зуба...\n";
-        s_caries->set_doctor(surgeon); // Ошибка: хирург не имеет допуска к терапии
-    } catch (const DoctorSpecialtyMismatchException& e) {
-        std::cout << "[ПЕРЕХВАЧЕНО]: " << e.what() << "\n";
-    }
-    std::cout << "\n\n";
-
-    std::cout << ">>> ИСКЛЮЧЕНИЕ 3: Попытка повторного добавления уже назначенной услуги\n";
-    try {
-        std::cout << "Попытка повторно добавить услугу '" << s_caries->get_serve() << "' в карту пациента " << patient1.get_name() << "...\n";
-        patient1 += s_caries; // Ошибка: услуга уже есть в плане лечения
-    } catch (const ClinicException& e) {
-        std::cout << "[ПЕРЕХВАЧЕНО]: " << e.what() << "\n";
-    }
-    std::cout << "\n\n";
-
-    std::cout << ">>> ИСКЛЮЧЕНИЕ 4: ServiceNotFoundException (удаление несуществующей услуги)\n";
-    Service* phantom_service = new SurgicalService("Пластика уздечки", 3500, 30, "Пластика", surgeon);
-    try {
-        std::cout << "Попытка удалить из карты пациента процедуру, которой там нет...\n";
-        patient1 -= phantom_service;
-    } catch (const ServiceNotFoundException& e) {
-        std::cout << "[ПЕРЕХВАЧЕНО]: " << e.what() << "\n";
-    }
-    std::cout << "\n\n";
-
-    std::cout << ">>> ИСКЛЮЧЕНИЕ 5: IndexOutOfBoundsException (выход за границы Collection<T>)\n";
-    std::cout << "В штате клиники находится врачей: " << clinic_doctors.get_size() << " (индексы от 0 до "
-              << clinic_doctors.get_size() - 1 << ")\n";
-    try {
-        std::cout << "Попытка обращения к врачу по индексу [10] через метод at()...\n";
-        clinic_doctors.at(10); // Ошибка индексации
-    } catch (const IndexOutOfBoundsException& e) {
-        std::cout << "[ПЕРЕХВАЧЕНО]: " << e.what() << "\n";
-    }
-    std::cout << "\n\n";
-
-    delete phantom_service;
-    delete s_caries;
-    delete s_wisdom;
-    delete s_braces;
-    for (size_t i = 0; i < clinic_doctors.get_size(); ++i) {
-        delete clinic_doctors[i];
-    }
+    // Очистка памяти
+    for (size_t i = 0; i < doctors.get_size(); ++i) delete doctors[i];
+    for (size_t i = 0; i < services.get_size(); ++i) delete services[i];
 
     return 0;
 }
