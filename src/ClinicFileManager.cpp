@@ -8,7 +8,6 @@
 #include <sstream>
 #include <ctime>
 
-// Вспомогательный поиск врача по ФИО для восстановления связи
 Doctor* ClinicFileManager::find_doctor_by_name(const Collection<Doctor*>& doctors, const std::string& name) {
     for (size_t i = 0; i < doctors.get_size(); ++i) {
         if (doctors[i]->get_name() == name) return doctors[i];
@@ -16,7 +15,6 @@ Doctor* ClinicFileManager::find_doctor_by_name(const Collection<Doctor*>& doctor
     return nullptr;
 }
 
-// Вспомогательный поиск услуги по названию для привязки к пациенту
 Service* ClinicFileManager::find_service_by_name(const Collection<Service*>& services, const std::string& name) {
     for (size_t i = 0; i < services.get_size(); ++i) {
         if (services[i]->get_serve() == name) return services[i];
@@ -24,7 +22,6 @@ Service* ClinicFileManager::find_service_by_name(const Collection<Service*>& ser
     return nullptr;
 }
 
-// 1. Запись в журнал событий
 void ClinicFileManager::log_event(const std::string& log_filename, const std::string& message) {
     std::ofstream log_file(log_filename, std::ios::app);
     if (!log_file.is_open()) return;
@@ -38,7 +35,6 @@ void ClinicFileManager::log_event(const std::string& log_filename, const std::st
     log_file << "[" << time_str << "] " << message << "\n";
 }
 
-// 2. Сериализация одного врача
 void ClinicFileManager::save_single_doctor(std::ofstream& out, Doctor* doc) {
     std::string type = doc->get_doctor_type();
     out << type << ";" << doc->get_name() << ";" << doc->get_experience() << ";";
@@ -52,7 +48,6 @@ void ClinicFileManager::save_single_doctor(std::ofstream& out, Doctor* doc) {
     out << "\n";
 }
 
-// 3. Десериализация одного врача
 Doctor* ClinicFileManager::load_single_doctor(const std::string& line) {
     std::stringstream ss(line);
     std::string type, name, exp_str, spec_str;
@@ -69,7 +64,6 @@ Doctor* ClinicFileManager::load_single_doctor(const std::string& line) {
     return nullptr;
 }
 
-// 4. Сериализация одной услуги
 void ClinicFileManager::save_single_service(std::ofstream& out, Service* srv) {
     std::string type = srv->get_serve_type();
     std::string doc_name = srv->get_doctor() ? srv->get_doctor()->get_name() : "NONE";
@@ -86,7 +80,6 @@ void ClinicFileManager::save_single_service(std::ofstream& out, Service* srv) {
     out << "\n";
 }
 
-// 5. Десериализация услуги с восстановлением связи с врачом
 Service* ClinicFileManager::load_single_service(const std::string& line, const Collection<Doctor*>& doctors) {
     std::stringstream ss(line);
     std::string type, serve, cost_str, dur_str, doc_name;
@@ -124,19 +117,16 @@ bool ClinicFileManager::save_system_state(const std::string& filename,
     std::ofstream out(filename);
     if (!out.is_open()) return false;
 
-    // Секция врачей
     out << "[DOCTORS] " << doctors.get_size() << "\n";
     for (size_t i = 0; i < doctors.get_size(); ++i) {
         save_single_doctor(out, doctors[i]);
     }
 
-    // Секция услуг
     out << "[SERVICES] " << services.get_size() << "\n";
     for (size_t i = 0; i < services.get_size(); ++i) {
         save_single_service(out, services[i]);
     }
 
-    // Секция пациентов
     out << "[PATIENTS] " << patients.get_size() << "\n";
     for (size_t i = 0; i < patients.get_size(); ++i) {
         out << patients[i].get_name() << ";" << (patients[i].get_has_card() ? "1" : "0") << "\n";
@@ -146,7 +136,6 @@ bool ClinicFileManager::save_system_state(const std::string& filename,
     return true;
 }
 
-// 7. Полная загрузка состояния из файла
 bool ClinicFileManager::load_system_state(const std::string& filename,
                                           Collection<Doctor*>& doctors,
                                           Collection<Service*>& services,

@@ -19,7 +19,9 @@ private:
 
     int get_int_input(const std::string& prompt);
     void manual_add_doctor();
+    void manual_add_service();
     void manual_add_patient();
+    void assign_service_to_patient();
     void show_system_state() const;
     void save_state();
     void load_state();
