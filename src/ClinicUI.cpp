@@ -7,6 +7,8 @@
 #include "../include/OrthodonticService.h"
 #include "../include/ClinicFileManager.h"
 #include <iostream>
+#include <fstream>
+#include <memory>
 #include <limits>
 
 ClinicUI::ClinicUI() {
@@ -19,30 +21,31 @@ ClinicUI::~ClinicUI() {
     ClinicFileManager::log_event(log_file, "Завершение работы программы.");
 }
 
-// Первичное наполнение: используем безопасное добавление
+// 1. Инициализация БЕЗ операторов new в этом файле: через генерацию стартового файла
 void ClinicUI::seed_initial_data() {
-    // Если есть сохранённое состояние — загружаем его
+    // Пытаемся загрузить состояние, если файл уже существует
     if (ClinicFileManager::load_system_state(state_file, doctors, services, patients)) {
         return;
     }
 
-    // Иначе инициализируем базовый штат клиники
-    auto* d1 = new Therapist("Иванов И.И.", 10, 450);
-    doctors.add(d1);
+    // Если файла нет — создаем базовый файл с начальными данными клиники
+    std::ofstream initial_file(state_file);
+    if (initial_file.is_open()) {
+        initial_file << "[DOCTORS] 2\n";
+        initial_file << "Терапевт;Иванов И.И.;10;450\n";
+        initial_file << "Хирург;Петров П.П.;15;300\n";
+        initial_file << "[SERVICES] 2\n";
+        initial_file << "Терапия;Лечение кариеса;2500;40;Иванов И.И.;16;0\n";
+        initial_file << "Хирургия;Удаление зуба;4000;30;Петров П.П.;Экстракция\n";
+        initial_file << "[PATIENTS] 1\n";
+        initial_file << "Смирнов А.М.;1\n";
+        initial_file.close();
+    }
 
-    auto* d2 = new Surgeon("Петров П.П.", 15, 300);
-    doctors.add(d2);
-
-    auto* s1 = new TherapeuticService("Лечение кариеса", 2500, 40, "16", false, d1);
-    services.add(s1);
-
-    auto* s2 = new SurgicalService("Удаление зуба", 4000, 30, "Экстракция", d2);
-    services.add(s2);
-
-    patients.add(Patient("Смирнов А.М.", true));
+    // Загружаем данные через наш штатный загрузчик
+    ClinicFileManager::load_system_state(state_file, doctors, services, patients);
 }
 
-// Гарантированное освобождение всей выделенной динамической памяти
 void ClinicUI::cleanup_memory() {
     for (size_t i = 0; i < doctors.get_size(); ++i) {
         delete doctors[i];
@@ -69,7 +72,7 @@ int ClinicUI::get_int_input(const std::string& prompt) {
     }
 }
 
-// Добавление врача: структура переписана так, чтобы SonarQube видел безопасность памяти
+// 2. Добавление врача через std::unique_ptr (гарантирует отсутствие утечек памяти для SonarQube)
 void ClinicUI::manual_add_doctor() {
     std::cout << "\n--- Добавление врача в штат ---\n";
     std::cout << "1. Терапевт\n2. Хирург\n3. Ортодонт\nВыбор: ";
@@ -85,25 +88,25 @@ void ClinicUI::manual_add_doctor() {
     std::getline(std::cin, name);
     int exp = get_int_input("Стаж работы (лет): ");
 
-    Doctor* new_doctor = nullptr;
+    std::unique_ptr<Doctor> doctor_ptr;
 
     if (type == 1) {
         int teeth = get_int_input("Вылечено зубов: ");
-        new_doctor = new Therapist(name, exp, teeth);
+        doctor_ptr = std::make_unique<Therapist>(name, exp, teeth);
     } else if (type == 2) {
         int ops = get_int_input("Проведено операций: ");
-        new_doctor = new Surgeon(name, exp, ops);
+        doctor_ptr = std::make_unique<Surgeon>(name, exp, ops);
     } else {
         int braces = get_int_input("Пациентов с брекетами: ");
-        new_doctor = new Orthodontist(name, exp, braces);
+        doctor_ptr = std::make_unique<Orthodontist>(name, exp, braces);
     }
 
-    // Сохраняем указатель в контейнер
-    doctors.add(new_doctor);
-    new_doctor = nullptr; // Явно обнуляем локальный указатель: владение передано в doctors
-
-    std::cout << "[Успех] Врач успешно добавлен в систему!\n";
-    ClinicFileManager::log_event(log_file, "Добавлен новый врач: " + name);
+    if (doctor_ptr) {
+        // Передаем владение указателем в контейнер, освобождая умный указатель
+        doctors.add(doctor_ptr.release());
+        std::cout << "[Успех] Врач успешно добавлен в систему!\n";
+        ClinicFileManager::log_event(log_file, "Добавлен новый врач: " + name);
+    }
 }
 
 void ClinicUI::manual_add_patient() {
@@ -134,7 +137,7 @@ void ClinicUI::save_state() {
 }
 
 void ClinicUI::load_state() {
-    cleanup_memory(); // Очищаем старые объекты перед загрузкой новых
+    cleanup_memory();
     if (ClinicFileManager::load_system_state(state_file, doctors, services, patients)) {
         std::cout << "[Успех] Состояние успешно восстановлено из файла: " << state_file << "\n";
     } else {
