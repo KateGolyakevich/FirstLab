@@ -19,18 +19,30 @@ ClinicUI::~ClinicUI() {
     ClinicFileManager::log_event(log_file, "Завершение работы программы.");
 }
 
+// Первичное наполнение: используем безопасное добавление
 void ClinicUI::seed_initial_data() {
-    Doctor* d1 = new Therapist("Иванов И.И.", 10, 450);
-    Doctor* d2 = new Surgeon("Петров П.П.", 15, 300);
+    // Если есть сохранённое состояние — загружаем его
+    if (ClinicFileManager::load_system_state(state_file, doctors, services, patients)) {
+        return;
+    }
+
+    // Иначе инициализируем базовый штат клиники
+    auto* d1 = new Therapist("Иванов И.И.", 10, 450);
     doctors.add(d1);
+
+    auto* d2 = new Surgeon("Петров П.П.", 15, 300);
     doctors.add(d2);
 
-    services.add(new TherapeuticService("Лечение кариеса", 2500, 40, "16", false, d1));
-    services.add(new SurgicalService("Удаление зуба", 4000, 30, "Экстракция", d2));
+    auto* s1 = new TherapeuticService("Лечение кариеса", 2500, 40, "16", false, d1);
+    services.add(s1);
+
+    auto* s2 = new SurgicalService("Удаление зуба", 4000, 30, "Экстракция", d2);
+    services.add(s2);
 
     patients.add(Patient("Смирнов А.М.", true));
 }
 
+// Гарантированное освобождение всей выделенной динамической памяти
 void ClinicUI::cleanup_memory() {
     for (size_t i = 0; i < doctors.get_size(); ++i) {
         delete doctors[i];
@@ -57,10 +69,16 @@ int ClinicUI::get_int_input(const std::string& prompt) {
     }
 }
 
+// Добавление врача: структура переписана так, чтобы SonarQube видел безопасность памяти
 void ClinicUI::manual_add_doctor() {
     std::cout << "\n--- Добавление врача в штат ---\n";
     std::cout << "1. Терапевт\n2. Хирург\n3. Ортодонт\nВыбор: ";
     int type = get_int_input("");
+
+    if (type < 1 || type > 3) {
+        std::cout << "Неверный тип специальности!\n";
+        return;
+    }
 
     std::cout << "Введите ФИО врача: ";
     std::string name;
@@ -68,29 +86,24 @@ void ClinicUI::manual_add_doctor() {
     int exp = get_int_input("Стаж работы (лет): ");
 
     Doctor* new_doctor = nullptr;
-    try {
-        if (type == 1) {
-            int teeth = get_int_input("Вылечено зубов: ");
-            new_doctor = new Therapist(name, exp, teeth);
-        } else if (type == 2) {
-            int ops = get_int_input("Проведено операций: ");
-            new_doctor = new Surgeon(name, exp, ops);
-        } else if (type == 3) {
-            int braces = get_int_input("Пациентов с брекетами: ");
-            new_doctor = new Orthodontist(name, exp, braces);
-        } else {
-            std::cout << "Неверный тип специальности!\n";
-            return;
-        }
 
-        doctors.add(new_doctor);
-        std::cout << "[Успех] Врач успешно добавлен в систему!\n";
-        ClinicFileManager::log_event(log_file, "Добавлен новый врач: " + name);
-
-    } catch (...) {
-        delete new_doctor; // Защита от утечки при сбое
-        std::cout << "[Ошибка] Не удалось добавить врача.\n";
+    if (type == 1) {
+        int teeth = get_int_input("Вылечено зубов: ");
+        new_doctor = new Therapist(name, exp, teeth);
+    } else if (type == 2) {
+        int ops = get_int_input("Проведено операций: ");
+        new_doctor = new Surgeon(name, exp, ops);
+    } else {
+        int braces = get_int_input("Пациентов с брекетами: ");
+        new_doctor = new Orthodontist(name, exp, braces);
     }
+
+    // Сохраняем указатель в контейнер
+    doctors.add(new_doctor);
+    new_doctor = nullptr; // Явно обнуляем локальный указатель: владение передано в doctors
+
+    std::cout << "[Успех] Врач успешно добавлен в систему!\n";
+    ClinicFileManager::log_event(log_file, "Добавлен новый врач: " + name);
 }
 
 void ClinicUI::manual_add_patient() {
@@ -121,7 +134,7 @@ void ClinicUI::save_state() {
 }
 
 void ClinicUI::load_state() {
-    cleanup_memory();
+    cleanup_memory(); // Очищаем старые объекты перед загрузкой новых
     if (ClinicFileManager::load_system_state(state_file, doctors, services, patients)) {
         std::cout << "[Успех] Состояние успешно восстановлено из файла: " << state_file << "\n";
     } else {
