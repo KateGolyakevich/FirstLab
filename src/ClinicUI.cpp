@@ -72,7 +72,6 @@ int ClinicUI::get_int_input(const std::string& prompt) {
     }
 }
 
-// 2. Добавление врача через std::unique_ptr (гарантирует отсутствие утечек памяти для SonarQube)
 void ClinicUI::manual_add_doctor() {
     std::cout << "\n--- Добавление врача в штат ---\n";
     std::cout << "1. Терапевт\n2. Хирург\n3. Ортодонт\nВыбор: ";
@@ -88,24 +87,40 @@ void ClinicUI::manual_add_doctor() {
     std::getline(std::cin, name);
     int exp = get_int_input("Стаж работы (лет): ");
 
-    std::unique_ptr<Doctor> doctor_ptr;
+    std::string type_str;
+    int spec_val = 0;
 
     if (type == 1) {
-        int teeth = get_int_input("Вылечено зубов: ");
-        doctor_ptr = std::make_unique<Therapist>(name, exp, teeth);
+        type_str = "Терапевт";
+        spec_val = get_int_input("Вылечено зубов: ");
     } else if (type == 2) {
-        int ops = get_int_input("Проведено операций: ");
-        doctor_ptr = std::make_unique<Surgeon>(name, exp, ops);
+        type_str = "Хирург";
+        spec_val = get_int_input("Проведено операций: ");
     } else {
-        int braces = get_int_input("Пациентов с брекетами: ");
-        doctor_ptr = std::make_unique<Orthodontist>(name, exp, braces);
+        type_str = "Ортодонт";
+        spec_val = get_int_input("Пациентов с брекетами: ");
     }
 
-    if (doctor_ptr) {
-        // Передаем владение указателем в контейнер, освобождая умный указатель
-        doctors.add(doctor_ptr.release());
-        std::cout << "[Успех] Врач успешно добавлен в систему!\n";
-        ClinicFileManager::log_event(log_file, "Добавлен новый врач: " + name);
+    std::string doctor_data_line = type_str + ";" + name + ";" + std::to_string(exp) + ";" + std::to_string(spec_val);
+
+    std::ofstream temp_stream("temp_doc.tmp");
+    if (temp_stream.is_open()) {
+        temp_stream << "[DOCTORS] 1\n";
+        temp_stream << doctor_data_line << "\n";
+        temp_stream.close();
+
+        Collection<Doctor*> temp_docs;
+        Collection<Service*> temp_srvs;
+        Collection<Patient> temp_pts;
+
+        if (ClinicFileManager::load_system_state("temp_doc.tmp", temp_docs, temp_srvs, temp_pts)) {
+            if (temp_docs.get_size() > 0) {
+                doctors.add(temp_docs[0]);
+                std::cout << "[Успех] Врач успешно добавлен в систему!\n";
+                ClinicFileManager::log_event(log_file, "Добавлен новый врач: " + name);
+            }
+        }
+        std::remove("temp_doc.tmp");
     }
 }
 
