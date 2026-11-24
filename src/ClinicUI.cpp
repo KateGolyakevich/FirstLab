@@ -22,19 +22,16 @@ void ClinicUI::seed_initial_data() {
 
     std::ofstream initial_file(state_file);
     if (initial_file.is_open()) {
-        // 3 специалиста: Терапевт, Хирург, Ортодонт
         initial_file << "[DOCTORS] 3\n";
         initial_file << "Терапевт;Иванов И.И.;10;450\n";
         initial_file << "Хирург;Петров П.П.;15;300\n";
         initial_file << "Ортодонт;Сидорова А.А.;8;110\n";
 
-        // 3 услуги: Терапия, Хирургия, Ортодонтия
         initial_file << "[SERVICES] 3\n";
         initial_file << "Терапия;Лечение кариеса;2500;40;Иванов И.И.;16;0\n";
         initial_file << "Хирургия;Удаление зуба;4000;30;Петров П.П.;Экстракция\n";
         initial_file << "Ортодонтия;Установка брекетов;65000;90;Сидорова А.А.;Брекеты;Керамика\n";
 
-        // Пациент
         initial_file << "[PATIENTS] 1\n";
         initial_file << "Смирнов А.М.;1\n";
         initial_file.close();
@@ -42,7 +39,6 @@ void ClinicUI::seed_initial_data() {
 
     ClinicFileManager::load_system_state(state_file, doctors, services, patients);
 
-    // Сразу прикрепляем первую услугу первому пациенту
     if (patients.get_size() > 0 && services.get_size() > 0) {
         patients[0] += services[0];
     }
@@ -74,7 +70,6 @@ int ClinicUI::get_int_input(const std::string& prompt) {
     }
 }
 
-// Добавление врача через десериализацию (0 issues SonarCloud)
 void ClinicUI::manual_add_doctor() {
     std::cout << "\n--- Добавление врача в штат ---\n";
     std::cout << "1. Терапевт\n2. Хирург\n3. Ортодонт\nВыбор: ";
@@ -125,7 +120,6 @@ void ClinicUI::manual_add_doctor() {
     }
 }
 
-// Добавление новой услуги (включая Ортодонтию)
 void ClinicUI::manual_add_service() {
     if (doctors.get_size() == 0) {
         std::cout << "[Ошибка] Сначала добавьте хотя бы одного врача!\n";
@@ -181,7 +175,6 @@ void ClinicUI::manual_add_service() {
 
     std::ofstream temp("temp_srv.tmp");
     if (temp.is_open()) {
-        // Записываем список врачей и одну услугу
         temp << "[DOCTORS] " << doctors.get_size() << "\n";
         for (size_t i = 0; i < doctors.get_size(); ++i) {
             temp << doctors[i]->get_doctor_type() << ";" << doctors[i]->get_name() << ";"
@@ -196,7 +189,6 @@ void ClinicUI::manual_add_service() {
 
         if (ClinicFileManager::load_system_state("temp_srv.tmp", temp_docs, temp_srvs, temp_pts)) {
             if (temp_srvs.get_size() > 0) {
-                // Привязываем реального врача из нашей коллекции
                 temp_srvs[0]->set_doctor(doctors[doc_idx]);
                 services.add(temp_srvs[0]);
                 std::cout << "[Успех] Услуга добавлена в прейскурант!\n";
@@ -249,7 +241,6 @@ void ClinicUI::assign_service_to_patient() {
         return;
     }
 
-    // Прикрепляем услугу через перегруженный оператор +=
     patients[p_idx] += services[s_idx];
     std::cout << "[Успех] Услуга \"" << services[s_idx]->get_serve()
               << "\" успешно назначена пациенту " << patients[p_idx].get_name() << "!\n";
