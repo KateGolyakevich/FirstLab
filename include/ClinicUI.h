@@ -13,9 +13,8 @@ private:
     Collection<Service*> services;
     Collection<Patient> patients;
 
-    const std::string state_file = "clinic_state.txt";
+    const std::string state_file = "clinic_state.id";
     const std::string report_file = "clinic_report.txt";
-    const std::string log_file = "journal.log";
 
     int get_int_input(const std::string& prompt);
     void manual_add_doctor();
@@ -32,7 +31,6 @@ private:
 public:
     ClinicUI();
     ~ClinicUI();
-
     void run();
 };
 
